@@ -21,7 +21,7 @@ import org.dgrf.ksamancore.db.entities.ReferencetextPK;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 public class ReferencetextJpaController implements Serializable {
 
@@ -38,10 +38,10 @@ public class ReferencetextJpaController implements Serializable {
         if (referencetext.getReferencetextPK() == null) {
             referencetext.setReferencetextPK(new ReferencetextPK());
         }
-        referencetext.getReferencetextPK().setMaintextAdhyayid(referencetext.getMaintext().getMaintextPK().getAdhyayid());
         referencetext.getReferencetextPK().setMaintextShlokaline(referencetext.getMaintext().getMaintextPK().getShlokaline());
-        referencetext.getReferencetextPK().setMaintextParvaId(referencetext.getMaintext().getMaintextPK().getParvaId());
+        referencetext.getReferencetextPK().setMaintextAdhyayid(referencetext.getMaintext().getMaintextPK().getAdhyayid());
         referencetext.getReferencetextPK().setMaintextShlokanum(referencetext.getMaintext().getMaintextPK().getShlokanum());
+        referencetext.getReferencetextPK().setMaintextParvaId(referencetext.getMaintext().getMaintextPK().getParvaId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -53,7 +53,7 @@ public class ReferencetextJpaController implements Serializable {
             }
             em.persist(referencetext);
             if (maintext != null) {
-                maintext.getReferencetextList().add(referencetext);
+                maintext.getReferencetextCollection().add(referencetext);
                 maintext = em.merge(maintext);
             }
             em.getTransaction().commit();
@@ -70,10 +70,10 @@ public class ReferencetextJpaController implements Serializable {
     }
 
     public void edit(Referencetext referencetext) throws NonexistentEntityException, Exception {
-        referencetext.getReferencetextPK().setMaintextAdhyayid(referencetext.getMaintext().getMaintextPK().getAdhyayid());
         referencetext.getReferencetextPK().setMaintextShlokaline(referencetext.getMaintext().getMaintextPK().getShlokaline());
-        referencetext.getReferencetextPK().setMaintextParvaId(referencetext.getMaintext().getMaintextPK().getParvaId());
+        referencetext.getReferencetextPK().setMaintextAdhyayid(referencetext.getMaintext().getMaintextPK().getAdhyayid());
         referencetext.getReferencetextPK().setMaintextShlokanum(referencetext.getMaintext().getMaintextPK().getShlokanum());
+        referencetext.getReferencetextPK().setMaintextParvaId(referencetext.getMaintext().getMaintextPK().getParvaId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -87,11 +87,11 @@ public class ReferencetextJpaController implements Serializable {
             }
             referencetext = em.merge(referencetext);
             if (maintextOld != null && !maintextOld.equals(maintextNew)) {
-                maintextOld.getReferencetextList().remove(referencetext);
+                maintextOld.getReferencetextCollection().remove(referencetext);
                 maintextOld = em.merge(maintextOld);
             }
             if (maintextNew != null && !maintextNew.equals(maintextOld)) {
-                maintextNew.getReferencetextList().add(referencetext);
+                maintextNew.getReferencetextCollection().add(referencetext);
                 maintextNew = em.merge(maintextNew);
             }
             em.getTransaction().commit();
@@ -125,7 +125,7 @@ public class ReferencetextJpaController implements Serializable {
             }
             Maintext maintext = referencetext.getMaintext();
             if (maintext != null) {
-                maintext.getReferencetextList().remove(referencetext);
+                maintext.getReferencetextCollection().remove(referencetext);
                 maintext = em.merge(maintext);
             }
             em.remove(referencetext);

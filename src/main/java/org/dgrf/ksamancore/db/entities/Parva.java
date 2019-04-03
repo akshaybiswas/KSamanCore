@@ -6,7 +6,7 @@
 package org.dgrf.ksamancore.db.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Entity
 @Table(name = "parva")
@@ -39,7 +39,7 @@ public class Parva implements Serializable {
     @Column(name = "name")
     private String name;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parva")
-    private List<Maintext> maintextList;
+    private Collection<Maintext> maintextCollection;
 
     public Parva() {
     }
@@ -70,12 +70,12 @@ public class Parva implements Serializable {
     }
 
     @XmlTransient
-    public List<Maintext> getMaintextList() {
-        return maintextList;
+    public Collection<Maintext> getMaintextCollection() {
+        return maintextCollection;
     }
 
-    public void setMaintextList(List<Maintext> maintextList) {
-        this.maintextList = maintextList;
+    public void setMaintextCollection(Collection<Maintext> maintextCollection) {
+        this.maintextCollection = maintextCollection;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Parva implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.Parva[ id=" + id + " ]";
+        return "org.dgrf.ksamancore.db.entities.Parva[ id=" + id + " ]";
     }
     
 }

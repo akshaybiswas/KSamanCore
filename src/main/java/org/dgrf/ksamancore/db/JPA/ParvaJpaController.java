@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.dgrf.ksamancore.db.entities.Maintext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,7 +23,7 @@ import org.dgrf.ksamancore.db.entities.Parva;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 public class ParvaJpaController implements Serializable {
 
@@ -36,27 +37,27 @@ public class ParvaJpaController implements Serializable {
     }
 
     public void create(Parva parva) throws PreexistingEntityException, Exception {
-        if (parva.getMaintextList() == null) {
-            parva.setMaintextList(new ArrayList<Maintext>());
+        if (parva.getMaintextCollection() == null) {
+            parva.setMaintextCollection(new ArrayList<Maintext>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Maintext> attachedMaintextList = new ArrayList<Maintext>();
-            for (Maintext maintextListMaintextToAttach : parva.getMaintextList()) {
-                maintextListMaintextToAttach = em.getReference(maintextListMaintextToAttach.getClass(), maintextListMaintextToAttach.getMaintextPK());
-                attachedMaintextList.add(maintextListMaintextToAttach);
+            Collection<Maintext> attachedMaintextCollection = new ArrayList<Maintext>();
+            for (Maintext maintextCollectionMaintextToAttach : parva.getMaintextCollection()) {
+                maintextCollectionMaintextToAttach = em.getReference(maintextCollectionMaintextToAttach.getClass(), maintextCollectionMaintextToAttach.getMaintextPK());
+                attachedMaintextCollection.add(maintextCollectionMaintextToAttach);
             }
-            parva.setMaintextList(attachedMaintextList);
+            parva.setMaintextCollection(attachedMaintextCollection);
             em.persist(parva);
-            for (Maintext maintextListMaintext : parva.getMaintextList()) {
-                Parva oldParvaOfMaintextListMaintext = maintextListMaintext.getParva();
-                maintextListMaintext.setParva(parva);
-                maintextListMaintext = em.merge(maintextListMaintext);
-                if (oldParvaOfMaintextListMaintext != null) {
-                    oldParvaOfMaintextListMaintext.getMaintextList().remove(maintextListMaintext);
-                    oldParvaOfMaintextListMaintext = em.merge(oldParvaOfMaintextListMaintext);
+            for (Maintext maintextCollectionMaintext : parva.getMaintextCollection()) {
+                Parva oldParvaOfMaintextCollectionMaintext = maintextCollectionMaintext.getParva();
+                maintextCollectionMaintext.setParva(parva);
+                maintextCollectionMaintext = em.merge(maintextCollectionMaintext);
+                if (oldParvaOfMaintextCollectionMaintext != null) {
+                    oldParvaOfMaintextCollectionMaintext.getMaintextCollection().remove(maintextCollectionMaintext);
+                    oldParvaOfMaintextCollectionMaintext = em.merge(oldParvaOfMaintextCollectionMaintext);
                 }
             }
             em.getTransaction().commit();
@@ -78,36 +79,36 @@ public class ParvaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Parva persistentParva = em.find(Parva.class, parva.getId());
-            List<Maintext> maintextListOld = persistentParva.getMaintextList();
-            List<Maintext> maintextListNew = parva.getMaintextList();
+            Collection<Maintext> maintextCollectionOld = persistentParva.getMaintextCollection();
+            Collection<Maintext> maintextCollectionNew = parva.getMaintextCollection();
             List<String> illegalOrphanMessages = null;
-            for (Maintext maintextListOldMaintext : maintextListOld) {
-                if (!maintextListNew.contains(maintextListOldMaintext)) {
+            for (Maintext maintextCollectionOldMaintext : maintextCollectionOld) {
+                if (!maintextCollectionNew.contains(maintextCollectionOldMaintext)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Maintext " + maintextListOldMaintext + " since its parva field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Maintext " + maintextCollectionOldMaintext + " since its parva field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Maintext> attachedMaintextListNew = new ArrayList<Maintext>();
-            for (Maintext maintextListNewMaintextToAttach : maintextListNew) {
-                maintextListNewMaintextToAttach = em.getReference(maintextListNewMaintextToAttach.getClass(), maintextListNewMaintextToAttach.getMaintextPK());
-                attachedMaintextListNew.add(maintextListNewMaintextToAttach);
+            Collection<Maintext> attachedMaintextCollectionNew = new ArrayList<Maintext>();
+            for (Maintext maintextCollectionNewMaintextToAttach : maintextCollectionNew) {
+                maintextCollectionNewMaintextToAttach = em.getReference(maintextCollectionNewMaintextToAttach.getClass(), maintextCollectionNewMaintextToAttach.getMaintextPK());
+                attachedMaintextCollectionNew.add(maintextCollectionNewMaintextToAttach);
             }
-            maintextListNew = attachedMaintextListNew;
-            parva.setMaintextList(maintextListNew);
+            maintextCollectionNew = attachedMaintextCollectionNew;
+            parva.setMaintextCollection(maintextCollectionNew);
             parva = em.merge(parva);
-            for (Maintext maintextListNewMaintext : maintextListNew) {
-                if (!maintextListOld.contains(maintextListNewMaintext)) {
-                    Parva oldParvaOfMaintextListNewMaintext = maintextListNewMaintext.getParva();
-                    maintextListNewMaintext.setParva(parva);
-                    maintextListNewMaintext = em.merge(maintextListNewMaintext);
-                    if (oldParvaOfMaintextListNewMaintext != null && !oldParvaOfMaintextListNewMaintext.equals(parva)) {
-                        oldParvaOfMaintextListNewMaintext.getMaintextList().remove(maintextListNewMaintext);
-                        oldParvaOfMaintextListNewMaintext = em.merge(oldParvaOfMaintextListNewMaintext);
+            for (Maintext maintextCollectionNewMaintext : maintextCollectionNew) {
+                if (!maintextCollectionOld.contains(maintextCollectionNewMaintext)) {
+                    Parva oldParvaOfMaintextCollectionNewMaintext = maintextCollectionNewMaintext.getParva();
+                    maintextCollectionNewMaintext.setParva(parva);
+                    maintextCollectionNewMaintext = em.merge(maintextCollectionNewMaintext);
+                    if (oldParvaOfMaintextCollectionNewMaintext != null && !oldParvaOfMaintextCollectionNewMaintext.equals(parva)) {
+                        oldParvaOfMaintextCollectionNewMaintext.getMaintextCollection().remove(maintextCollectionNewMaintext);
+                        oldParvaOfMaintextCollectionNewMaintext = em.merge(oldParvaOfMaintextCollectionNewMaintext);
                     }
                 }
             }
@@ -141,12 +142,12 @@ public class ParvaJpaController implements Serializable {
                 throw new NonexistentEntityException("The parva with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Maintext> maintextListOrphanCheck = parva.getMaintextList();
-            for (Maintext maintextListOrphanCheckMaintext : maintextListOrphanCheck) {
+            Collection<Maintext> maintextCollectionOrphanCheck = parva.getMaintextCollection();
+            for (Maintext maintextCollectionOrphanCheckMaintext : maintextCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Parva (" + parva + ") cannot be destroyed since the Maintext " + maintextListOrphanCheckMaintext + " in its maintextList field has a non-nullable parva field.");
+                illegalOrphanMessages.add("This Parva (" + parva + ") cannot be destroyed since the Maintext " + maintextCollectionOrphanCheckMaintext + " in its maintextCollection field has a non-nullable parva field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

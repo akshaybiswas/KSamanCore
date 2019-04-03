@@ -14,6 +14,7 @@ import org.dgrf.ksamancore.db.entities.Parva;
 import org.dgrf.ksamancore.db.entities.Ubacha;
 import org.dgrf.ksamancore.db.entities.Referencetext;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +27,7 @@ import org.dgrf.ksamancore.db.entities.Words;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 public class MaintextJpaController implements Serializable {
 
@@ -43,11 +44,11 @@ public class MaintextJpaController implements Serializable {
         if (maintext.getMaintextPK() == null) {
             maintext.setMaintextPK(new MaintextPK());
         }
-        if (maintext.getReferencetextList() == null) {
-            maintext.setReferencetextList(new ArrayList<Referencetext>());
+        if (maintext.getReferencetextCollection() == null) {
+            maintext.setReferencetextCollection(new ArrayList<Referencetext>());
         }
-        if (maintext.getWordsList() == null) {
-            maintext.setWordsList(new ArrayList<Words>());
+        if (maintext.getWordsCollection() == null) {
+            maintext.setWordsCollection(new ArrayList<Words>());
         }
         maintext.getMaintextPK().setParvaId(maintext.getParva().getId());
         EntityManager em = null;
@@ -64,43 +65,43 @@ public class MaintextJpaController implements Serializable {
                 ubachaId = em.getReference(ubachaId.getClass(), ubachaId.getId());
                 maintext.setUbachaId(ubachaId);
             }
-            List<Referencetext> attachedReferencetextList = new ArrayList<Referencetext>();
-            for (Referencetext referencetextListReferencetextToAttach : maintext.getReferencetextList()) {
-                referencetextListReferencetextToAttach = em.getReference(referencetextListReferencetextToAttach.getClass(), referencetextListReferencetextToAttach.getReferencetextPK());
-                attachedReferencetextList.add(referencetextListReferencetextToAttach);
+            Collection<Referencetext> attachedReferencetextCollection = new ArrayList<Referencetext>();
+            for (Referencetext referencetextCollectionReferencetextToAttach : maintext.getReferencetextCollection()) {
+                referencetextCollectionReferencetextToAttach = em.getReference(referencetextCollectionReferencetextToAttach.getClass(), referencetextCollectionReferencetextToAttach.getReferencetextPK());
+                attachedReferencetextCollection.add(referencetextCollectionReferencetextToAttach);
             }
-            maintext.setReferencetextList(attachedReferencetextList);
-            List<Words> attachedWordsList = new ArrayList<Words>();
-            for (Words wordsListWordsToAttach : maintext.getWordsList()) {
-                wordsListWordsToAttach = em.getReference(wordsListWordsToAttach.getClass(), wordsListWordsToAttach.getWordsPK());
-                attachedWordsList.add(wordsListWordsToAttach);
+            maintext.setReferencetextCollection(attachedReferencetextCollection);
+            Collection<Words> attachedWordsCollection = new ArrayList<Words>();
+            for (Words wordsCollectionWordsToAttach : maintext.getWordsCollection()) {
+                wordsCollectionWordsToAttach = em.getReference(wordsCollectionWordsToAttach.getClass(), wordsCollectionWordsToAttach.getWordsPK());
+                attachedWordsCollection.add(wordsCollectionWordsToAttach);
             }
-            maintext.setWordsList(attachedWordsList);
+            maintext.setWordsCollection(attachedWordsCollection);
             em.persist(maintext);
             if (parva != null) {
-                parva.getMaintextList().add(maintext);
+                parva.getMaintextCollection().add(maintext);
                 parva = em.merge(parva);
             }
             if (ubachaId != null) {
-                ubachaId.getMaintextList().add(maintext);
+                ubachaId.getMaintextCollection().add(maintext);
                 ubachaId = em.merge(ubachaId);
             }
-            for (Referencetext referencetextListReferencetext : maintext.getReferencetextList()) {
-                Maintext oldMaintextOfReferencetextListReferencetext = referencetextListReferencetext.getMaintext();
-                referencetextListReferencetext.setMaintext(maintext);
-                referencetextListReferencetext = em.merge(referencetextListReferencetext);
-                if (oldMaintextOfReferencetextListReferencetext != null) {
-                    oldMaintextOfReferencetextListReferencetext.getReferencetextList().remove(referencetextListReferencetext);
-                    oldMaintextOfReferencetextListReferencetext = em.merge(oldMaintextOfReferencetextListReferencetext);
+            for (Referencetext referencetextCollectionReferencetext : maintext.getReferencetextCollection()) {
+                Maintext oldMaintextOfReferencetextCollectionReferencetext = referencetextCollectionReferencetext.getMaintext();
+                referencetextCollectionReferencetext.setMaintext(maintext);
+                referencetextCollectionReferencetext = em.merge(referencetextCollectionReferencetext);
+                if (oldMaintextOfReferencetextCollectionReferencetext != null) {
+                    oldMaintextOfReferencetextCollectionReferencetext.getReferencetextCollection().remove(referencetextCollectionReferencetext);
+                    oldMaintextOfReferencetextCollectionReferencetext = em.merge(oldMaintextOfReferencetextCollectionReferencetext);
                 }
             }
-            for (Words wordsListWords : maintext.getWordsList()) {
-                Maintext oldMaintextOfWordsListWords = wordsListWords.getMaintext();
-                wordsListWords.setMaintext(maintext);
-                wordsListWords = em.merge(wordsListWords);
-                if (oldMaintextOfWordsListWords != null) {
-                    oldMaintextOfWordsListWords.getWordsList().remove(wordsListWords);
-                    oldMaintextOfWordsListWords = em.merge(oldMaintextOfWordsListWords);
+            for (Words wordsCollectionWords : maintext.getWordsCollection()) {
+                Maintext oldMaintextOfWordsCollectionWords = wordsCollectionWords.getMaintext();
+                wordsCollectionWords.setMaintext(maintext);
+                wordsCollectionWords = em.merge(wordsCollectionWords);
+                if (oldMaintextOfWordsCollectionWords != null) {
+                    oldMaintextOfWordsCollectionWords.getWordsCollection().remove(wordsCollectionWords);
+                    oldMaintextOfWordsCollectionWords = em.merge(oldMaintextOfWordsCollectionWords);
                 }
             }
             em.getTransaction().commit();
@@ -127,25 +128,25 @@ public class MaintextJpaController implements Serializable {
             Parva parvaNew = maintext.getParva();
             Ubacha ubachaIdOld = persistentMaintext.getUbachaId();
             Ubacha ubachaIdNew = maintext.getUbachaId();
-            List<Referencetext> referencetextListOld = persistentMaintext.getReferencetextList();
-            List<Referencetext> referencetextListNew = maintext.getReferencetextList();
-            List<Words> wordsListOld = persistentMaintext.getWordsList();
-            List<Words> wordsListNew = maintext.getWordsList();
+            Collection<Referencetext> referencetextCollectionOld = persistentMaintext.getReferencetextCollection();
+            Collection<Referencetext> referencetextCollectionNew = maintext.getReferencetextCollection();
+            Collection<Words> wordsCollectionOld = persistentMaintext.getWordsCollection();
+            Collection<Words> wordsCollectionNew = maintext.getWordsCollection();
             List<String> illegalOrphanMessages = null;
-            for (Referencetext referencetextListOldReferencetext : referencetextListOld) {
-                if (!referencetextListNew.contains(referencetextListOldReferencetext)) {
+            for (Referencetext referencetextCollectionOldReferencetext : referencetextCollectionOld) {
+                if (!referencetextCollectionNew.contains(referencetextCollectionOldReferencetext)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Referencetext " + referencetextListOldReferencetext + " since its maintext field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Referencetext " + referencetextCollectionOldReferencetext + " since its maintext field is not nullable.");
                 }
             }
-            for (Words wordsListOldWords : wordsListOld) {
-                if (!wordsListNew.contains(wordsListOldWords)) {
+            for (Words wordsCollectionOldWords : wordsCollectionOld) {
+                if (!wordsCollectionNew.contains(wordsCollectionOldWords)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Words " + wordsListOldWords + " since its maintext field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Words " + wordsCollectionOldWords + " since its maintext field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -159,56 +160,56 @@ public class MaintextJpaController implements Serializable {
                 ubachaIdNew = em.getReference(ubachaIdNew.getClass(), ubachaIdNew.getId());
                 maintext.setUbachaId(ubachaIdNew);
             }
-            List<Referencetext> attachedReferencetextListNew = new ArrayList<Referencetext>();
-            for (Referencetext referencetextListNewReferencetextToAttach : referencetextListNew) {
-                referencetextListNewReferencetextToAttach = em.getReference(referencetextListNewReferencetextToAttach.getClass(), referencetextListNewReferencetextToAttach.getReferencetextPK());
-                attachedReferencetextListNew.add(referencetextListNewReferencetextToAttach);
+            Collection<Referencetext> attachedReferencetextCollectionNew = new ArrayList<Referencetext>();
+            for (Referencetext referencetextCollectionNewReferencetextToAttach : referencetextCollectionNew) {
+                referencetextCollectionNewReferencetextToAttach = em.getReference(referencetextCollectionNewReferencetextToAttach.getClass(), referencetextCollectionNewReferencetextToAttach.getReferencetextPK());
+                attachedReferencetextCollectionNew.add(referencetextCollectionNewReferencetextToAttach);
             }
-            referencetextListNew = attachedReferencetextListNew;
-            maintext.setReferencetextList(referencetextListNew);
-            List<Words> attachedWordsListNew = new ArrayList<Words>();
-            for (Words wordsListNewWordsToAttach : wordsListNew) {
-                wordsListNewWordsToAttach = em.getReference(wordsListNewWordsToAttach.getClass(), wordsListNewWordsToAttach.getWordsPK());
-                attachedWordsListNew.add(wordsListNewWordsToAttach);
+            referencetextCollectionNew = attachedReferencetextCollectionNew;
+            maintext.setReferencetextCollection(referencetextCollectionNew);
+            Collection<Words> attachedWordsCollectionNew = new ArrayList<Words>();
+            for (Words wordsCollectionNewWordsToAttach : wordsCollectionNew) {
+                wordsCollectionNewWordsToAttach = em.getReference(wordsCollectionNewWordsToAttach.getClass(), wordsCollectionNewWordsToAttach.getWordsPK());
+                attachedWordsCollectionNew.add(wordsCollectionNewWordsToAttach);
             }
-            wordsListNew = attachedWordsListNew;
-            maintext.setWordsList(wordsListNew);
+            wordsCollectionNew = attachedWordsCollectionNew;
+            maintext.setWordsCollection(wordsCollectionNew);
             maintext = em.merge(maintext);
             if (parvaOld != null && !parvaOld.equals(parvaNew)) {
-                parvaOld.getMaintextList().remove(maintext);
+                parvaOld.getMaintextCollection().remove(maintext);
                 parvaOld = em.merge(parvaOld);
             }
             if (parvaNew != null && !parvaNew.equals(parvaOld)) {
-                parvaNew.getMaintextList().add(maintext);
+                parvaNew.getMaintextCollection().add(maintext);
                 parvaNew = em.merge(parvaNew);
             }
             if (ubachaIdOld != null && !ubachaIdOld.equals(ubachaIdNew)) {
-                ubachaIdOld.getMaintextList().remove(maintext);
+                ubachaIdOld.getMaintextCollection().remove(maintext);
                 ubachaIdOld = em.merge(ubachaIdOld);
             }
             if (ubachaIdNew != null && !ubachaIdNew.equals(ubachaIdOld)) {
-                ubachaIdNew.getMaintextList().add(maintext);
+                ubachaIdNew.getMaintextCollection().add(maintext);
                 ubachaIdNew = em.merge(ubachaIdNew);
             }
-            for (Referencetext referencetextListNewReferencetext : referencetextListNew) {
-                if (!referencetextListOld.contains(referencetextListNewReferencetext)) {
-                    Maintext oldMaintextOfReferencetextListNewReferencetext = referencetextListNewReferencetext.getMaintext();
-                    referencetextListNewReferencetext.setMaintext(maintext);
-                    referencetextListNewReferencetext = em.merge(referencetextListNewReferencetext);
-                    if (oldMaintextOfReferencetextListNewReferencetext != null && !oldMaintextOfReferencetextListNewReferencetext.equals(maintext)) {
-                        oldMaintextOfReferencetextListNewReferencetext.getReferencetextList().remove(referencetextListNewReferencetext);
-                        oldMaintextOfReferencetextListNewReferencetext = em.merge(oldMaintextOfReferencetextListNewReferencetext);
+            for (Referencetext referencetextCollectionNewReferencetext : referencetextCollectionNew) {
+                if (!referencetextCollectionOld.contains(referencetextCollectionNewReferencetext)) {
+                    Maintext oldMaintextOfReferencetextCollectionNewReferencetext = referencetextCollectionNewReferencetext.getMaintext();
+                    referencetextCollectionNewReferencetext.setMaintext(maintext);
+                    referencetextCollectionNewReferencetext = em.merge(referencetextCollectionNewReferencetext);
+                    if (oldMaintextOfReferencetextCollectionNewReferencetext != null && !oldMaintextOfReferencetextCollectionNewReferencetext.equals(maintext)) {
+                        oldMaintextOfReferencetextCollectionNewReferencetext.getReferencetextCollection().remove(referencetextCollectionNewReferencetext);
+                        oldMaintextOfReferencetextCollectionNewReferencetext = em.merge(oldMaintextOfReferencetextCollectionNewReferencetext);
                     }
                 }
             }
-            for (Words wordsListNewWords : wordsListNew) {
-                if (!wordsListOld.contains(wordsListNewWords)) {
-                    Maintext oldMaintextOfWordsListNewWords = wordsListNewWords.getMaintext();
-                    wordsListNewWords.setMaintext(maintext);
-                    wordsListNewWords = em.merge(wordsListNewWords);
-                    if (oldMaintextOfWordsListNewWords != null && !oldMaintextOfWordsListNewWords.equals(maintext)) {
-                        oldMaintextOfWordsListNewWords.getWordsList().remove(wordsListNewWords);
-                        oldMaintextOfWordsListNewWords = em.merge(oldMaintextOfWordsListNewWords);
+            for (Words wordsCollectionNewWords : wordsCollectionNew) {
+                if (!wordsCollectionOld.contains(wordsCollectionNewWords)) {
+                    Maintext oldMaintextOfWordsCollectionNewWords = wordsCollectionNewWords.getMaintext();
+                    wordsCollectionNewWords.setMaintext(maintext);
+                    wordsCollectionNewWords = em.merge(wordsCollectionNewWords);
+                    if (oldMaintextOfWordsCollectionNewWords != null && !oldMaintextOfWordsCollectionNewWords.equals(maintext)) {
+                        oldMaintextOfWordsCollectionNewWords.getWordsCollection().remove(wordsCollectionNewWords);
+                        oldMaintextOfWordsCollectionNewWords = em.merge(oldMaintextOfWordsCollectionNewWords);
                     }
                 }
             }
@@ -242,31 +243,31 @@ public class MaintextJpaController implements Serializable {
                 throw new NonexistentEntityException("The maintext with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Referencetext> referencetextListOrphanCheck = maintext.getReferencetextList();
-            for (Referencetext referencetextListOrphanCheckReferencetext : referencetextListOrphanCheck) {
+            Collection<Referencetext> referencetextCollectionOrphanCheck = maintext.getReferencetextCollection();
+            for (Referencetext referencetextCollectionOrphanCheckReferencetext : referencetextCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Maintext (" + maintext + ") cannot be destroyed since the Referencetext " + referencetextListOrphanCheckReferencetext + " in its referencetextList field has a non-nullable maintext field.");
+                illegalOrphanMessages.add("This Maintext (" + maintext + ") cannot be destroyed since the Referencetext " + referencetextCollectionOrphanCheckReferencetext + " in its referencetextCollection field has a non-nullable maintext field.");
             }
-            List<Words> wordsListOrphanCheck = maintext.getWordsList();
-            for (Words wordsListOrphanCheckWords : wordsListOrphanCheck) {
+            Collection<Words> wordsCollectionOrphanCheck = maintext.getWordsCollection();
+            for (Words wordsCollectionOrphanCheckWords : wordsCollectionOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Maintext (" + maintext + ") cannot be destroyed since the Words " + wordsListOrphanCheckWords + " in its wordsList field has a non-nullable maintext field.");
+                illegalOrphanMessages.add("This Maintext (" + maintext + ") cannot be destroyed since the Words " + wordsCollectionOrphanCheckWords + " in its wordsCollection field has a non-nullable maintext field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Parva parva = maintext.getParva();
             if (parva != null) {
-                parva.getMaintextList().remove(maintext);
+                parva.getMaintextCollection().remove(maintext);
                 parva = em.merge(parva);
             }
             Ubacha ubachaId = maintext.getUbachaId();
             if (ubachaId != null) {
-                ubachaId.getMaintextList().remove(maintext);
+                ubachaId.getMaintextCollection().remove(maintext);
                 ubachaId = em.merge(ubachaId);
             }
             em.remove(maintext);

@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Embeddable
 public class WordsPK implements Serializable {
@@ -122,7 +122,7 @@ public class WordsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.WordsPK[ maintextParvaId=" + maintextParvaId + ", maintextAdhyayid=" + maintextAdhyayid + ", maintextShlokanum=" + maintextShlokanum + ", maintextShlokaline=" + maintextShlokaline + ", wordnum=" + wordnum + " ]";
+        return "org.dgrf.ksamancore.db.entities.WordsPK[ maintextParvaId=" + maintextParvaId + ", maintextAdhyayid=" + maintextAdhyayid + ", maintextShlokanum=" + maintextShlokanum + ", maintextShlokaline=" + maintextShlokaline + ", wordnum=" + wordnum + " ]";
     }
     
 }

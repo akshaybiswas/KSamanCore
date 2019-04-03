@@ -6,8 +6,8 @@
 package org.dgrf.ksamancore.db.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Entity
 @Table(name = "maintext")
@@ -41,8 +41,8 @@ public class Maintext implements Serializable {
     protected MaintextPK maintextPK;
     @Basic(optional = false)
     @Lob
-    @Column(name = "shokatext")
-    private String shokatext;
+    @Column(name = "shlokatext")
+    private String shlokatext;
     @Basic(optional = false)
     @Column(name = "firstchar")
     private String firstchar;
@@ -57,9 +57,9 @@ public class Maintext implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastupdatedts;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintext")
-    private List<Referencetext> referencetextList;
+    private Collection<Referencetext> referencetextCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintext")
-    private List<Words> wordsList;
+    private Collection<Words> wordsCollection;
     @JoinColumn(name = "parva_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Parva parva;
@@ -74,9 +74,9 @@ public class Maintext implements Serializable {
         this.maintextPK = maintextPK;
     }
 
-    public Maintext(MaintextPK maintextPK, String shokatext, String firstchar, String endchar, Date lastupdatedts) {
+    public Maintext(MaintextPK maintextPK, String shlokatext, String firstchar, String endchar, Date lastupdatedts) {
         this.maintextPK = maintextPK;
-        this.shokatext = shokatext;
+        this.shlokatext = shlokatext;
         this.firstchar = firstchar;
         this.endchar = endchar;
         this.lastupdatedts = lastupdatedts;
@@ -94,12 +94,12 @@ public class Maintext implements Serializable {
         this.maintextPK = maintextPK;
     }
 
-    public String getShokatext() {
-        return shokatext;
+    public String getShlokatext() {
+        return shlokatext;
     }
 
-    public void setShokatext(String shokatext) {
-        this.shokatext = shokatext;
+    public void setShlokatext(String shlokatext) {
+        this.shlokatext = shlokatext;
     }
 
     public String getFirstchar() {
@@ -135,21 +135,21 @@ public class Maintext implements Serializable {
     }
 
     @XmlTransient
-    public List<Referencetext> getReferencetextList() {
-        return referencetextList;
+    public Collection<Referencetext> getReferencetextCollection() {
+        return referencetextCollection;
     }
 
-    public void setReferencetextList(List<Referencetext> referencetextList) {
-        this.referencetextList = referencetextList;
+    public void setReferencetextCollection(Collection<Referencetext> referencetextCollection) {
+        this.referencetextCollection = referencetextCollection;
     }
 
     @XmlTransient
-    public List<Words> getWordsList() {
-        return wordsList;
+    public Collection<Words> getWordsCollection() {
+        return wordsCollection;
     }
 
-    public void setWordsList(List<Words> wordsList) {
-        this.wordsList = wordsList;
+    public void setWordsCollection(Collection<Words> wordsCollection) {
+        this.wordsCollection = wordsCollection;
     }
 
     public Parva getParva() {
@@ -190,7 +190,7 @@ public class Maintext implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.Maintext[ maintextPK=" + maintextPK + " ]";
+        return "org.dgrf.ksamancore.db.entities.Maintext[ maintextPK=" + maintextPK + " ]";
     }
     
 }

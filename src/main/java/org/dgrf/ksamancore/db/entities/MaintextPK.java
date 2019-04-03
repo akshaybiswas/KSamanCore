@@ -12,7 +12,7 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Embeddable
 public class MaintextPK implements Serializable {
@@ -106,7 +106,7 @@ public class MaintextPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.MaintextPK[ parvaId=" + parvaId + ", adhyayid=" + adhyayid + ", shlokanum=" + shlokanum + ", shlokaline=" + shlokaline + " ]";
+        return "org.dgrf.ksamancore.db.entities.MaintextPK[ parvaId=" + parvaId + ", adhyayid=" + adhyayid + ", shlokanum=" + shlokanum + ", shlokaline=" + shlokaline + " ]";
     }
     
 }

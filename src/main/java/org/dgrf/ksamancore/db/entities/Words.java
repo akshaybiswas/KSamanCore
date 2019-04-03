@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Entity
 @Table(name = "words")
@@ -117,7 +117,7 @@ public class Words implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.Words[ wordsPK=" + wordsPK + " ]";
+        return "org.dgrf.ksamancore.db.entities.Words[ wordsPK=" + wordsPK + " ]";
     }
     
 }

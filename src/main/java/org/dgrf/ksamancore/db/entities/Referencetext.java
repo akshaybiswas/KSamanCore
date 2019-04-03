@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author bhaduri
+ * @author dgrfiv
  */
 @Entity
 @Table(name = "referencetext")
@@ -107,7 +107,7 @@ public class Referencetext implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.entities.Referencetext[ referencetextPK=" + referencetextPK + " ]";
+        return "org.dgrf.ksamancore.db.entities.Referencetext[ referencetextPK=" + referencetextPK + " ]";
     }
     
 }
