@@ -35,21 +35,12 @@ public class KSCoreService {
 //        List<Parva> parvaList = parvaDAO.findParvaEntities();
 //        parvaList.stream().forEach(x->System.out.println(x.getName()));
 //    }
-    public ParvaDTO getSelectedParvaDTO(int parvaId) {
-        ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
-        Parva parva = parvaDAO.findParva(parvaId);
-        ParvaDTO parvaDTO = new ParvaDTO();
-        
-        parvaDTO.setParvaId(parvaId);
-        parvaDTO.setParvaName(parva.getName());
-        
-        return parvaDTO;
-    }
     
     public ParvaDTO getParvaDTO(ParvaDTO parvaDTO) {
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(parvaDTO.getParvaId());
         
+        parvaDTO.setParvaId(parva.getId());
         parvaDTO.setParvaName(parva.getName());
         
         return parvaDTO;
@@ -59,6 +50,7 @@ public class KSCoreService {
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
         
+        ubachaDTO.setUbachaId(ubacha.getId());
         ubachaDTO.setUbachaName(ubacha.getName());
         ubachaDTO.setUbachaBachan(ubacha.getBachan());
         
@@ -208,6 +200,77 @@ public class KSCoreService {
         
         try {
             parvaDAO.destroy(parva.getId());
+            responseCode = DGRFResponseCode.SUCCESS;
+            
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_ILLEGAL_ORPHAN;
+            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_NON_EXISTING;
+        }
+        return responseCode;
+    }
+    
+    //////////////////// UBACHA CRUD ////////////////////
+    
+    public int addUbacha(UbachaDTO ubachaDTO) {
+        int responseCode;
+        
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        Ubacha ubacha = new Ubacha();
+        
+        ubacha.setId(ubachaDTO.getUbachaId());
+        ubacha.setName(ubachaDTO.getUbachaName());
+        ubacha.setBachan(ubachaDTO.getUbachaBachan());
+        
+        try {
+            ubachaDAO.create(ubacha);
+            responseCode = DGRFResponseCode.SUCCESS;
+            
+        } catch (PreexistingEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_DUPLICATE;
+        
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
+    }
+    
+    public int updateUbacha(UbachaDTO ubachaDTO) {
+        int responseCode;
+        
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
+        
+        ubacha.setName(ubachaDTO.getUbachaName());
+        ubacha.setBachan(ubachaDTO.getUbachaBachan());
+        
+        try {
+            ubachaDAO.edit(ubacha);
+            responseCode = DGRFResponseCode.SUCCESS;
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_NON_EXISTING;
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
+    }
+    
+    
+    public int removeUbacha(UbachaDTO ubachaDTO) {
+        int responseCode;
+        
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
+        
+        try {
+            ubachaDAO.destroy(ubacha.getId());
             responseCode = DGRFResponseCode.SUCCESS;
             
         } catch (IllegalOrphanException ex) {
