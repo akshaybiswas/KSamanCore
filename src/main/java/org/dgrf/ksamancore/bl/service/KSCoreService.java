@@ -283,4 +283,43 @@ public class KSCoreService {
         }
         return responseCode;
     }
+    
+    
+    //////////////////// MAINTEXT OPERATIONS ////////////////////
+    
+    public List<MaintextDTO> getAdhyayIdList(int parvaId) {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+
+        List<Integer> adhyayList = maintextDAO.getAdhyayByParvaId(parvaId);
+        List<MaintextDTO> adhyayDTOList = new ArrayList<>();
+        
+        for (int i = 0; i < adhyayList.size(); i++) {
+            
+            MaintextDTO maintextDTO = new MaintextDTO();
+            
+            maintextDTO.setAdhyayId(adhyayList.get(i));
+            
+            adhyayDTOList.add(maintextDTO);
+        }
+        return adhyayDTOList;
+    }
+    
+    public List<MaintextDTO> getShlokaList(int parvaId, int adhyayId) {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+
+        List<Maintext> shlokaList = maintextDAO.getShlokaByParvaAndAdhyayId(parvaId, adhyayId);
+        List<MaintextDTO> shlokaDTOList = new ArrayList<>();
+        
+        for (int i = 0; i < shlokaList.size(); i++) {
+            MaintextDTO shlokaDTO = new MaintextDTO();
+            
+            shlokaDTO.setShlokaText(shlokaList.get(i).getShlokatext());
+            shlokaDTO.setShlokaLine(shlokaList.get(i).getMaintextPK().getShlokaline());
+            shlokaDTO.setShlokaNum(shlokaList.get(i).getMaintextPK().getShlokanum());
+            shlokaDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
+            
+            shlokaDTOList.add(shlokaDTO);
+        }
+        return shlokaDTOList;
+    }
 }

@@ -33,7 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "maintext")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Maintext.findAll", query = "SELECT m FROM Maintext m")})
+    @NamedQuery(name = "Maintext.findAll", query = "SELECT m FROM Maintext m")
+})
 public class Maintext implements Serializable {
 
     private static final long serialVersionUID = 1L;
