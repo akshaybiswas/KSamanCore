@@ -22,7 +22,12 @@ public class MaintextDTO {
     private String firstChar;
     private String endChar;
     private String anubadText;
+    private String ubachaName;
+    private String ubachaBachan;
     private Date lastEditTS;
+    
+    private int maxShlokaNum;
+    private int maxShlokaLine;
 
     public int getParvaId() {
         return parvaId;
@@ -103,7 +108,37 @@ public class MaintextDTO {
     public void setLastEditTS(Date lastEditTS) {
         this.lastEditTS = lastEditTS;
     }
-    
-    
+
+    public String getUbachaName() {
+        return ubachaName;
+    }
+
+    public void setUbachaName(String ubachaName) {
+        this.ubachaName = ubachaName;
+    }
+
+    public String getUbachaBachan() {
+        return ubachaBachan;
+    }
+
+    public void setUbachaBachan(String ubachaBachan) {
+        this.ubachaBachan = ubachaBachan;
+    }
+
+    public int getMaxShlokaNum() {
+        return maxShlokaNum;
+    }
+
+    public void setMaxShlokaNum(int maxShlokaNum) {
+        this.maxShlokaNum = maxShlokaNum;
+    }
+
+    public int getMaxShlokaLine() {
+        return maxShlokaLine;
+    }
+
+    public void setMaxShlokaLine(int maxShlokaLine) {
+        this.maxShlokaLine = maxShlokaLine;
+    }
     
 }

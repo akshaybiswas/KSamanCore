@@ -8,4 +8,13 @@
         <query>SELECT m FROM Maintext m WHERE m.maintextPK.parvaId = :parvaId AND m.maintextPK.adhyayid = :adhyayId</query>
     </named-query>
     
+    <named-query name="Maintext.findMaxShlokaNum">
+        <query>SELECT MAX(a.maintextPK.shlokanum) FROM Maintext a WHERE a.maintextPK.parvaId = :parvaId AND a.maintextPK.adhyayid = :adhyayId</query>
+    </named-query>
+    
+    <named-query name="Maintext.findMaxShlokaLine">
+        <query>SELECT MAX(a.maintextPK.shlokaline) FROM Maintext a WHERE a.maintextPK.parvaId = :parvaId AND a.maintextPK.adhyayid = :adhyayId AND a.maintextPK.shlokanum = :shlokaNum</query>
+    </named-query>
+    
+    
 </entity-mappings>

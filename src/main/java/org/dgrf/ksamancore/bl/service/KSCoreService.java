@@ -6,9 +6,11 @@
 package org.dgrf.ksamancore.bl.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import org.dgrf.cloud.response.DGRFResponseCode;
 import org.dgrf.ksamancore.DTO.MaintextDTO;
 import org.dgrf.ksamancore.DTO.ParvaDTO;
@@ -29,104 +31,104 @@ import org.dgrf.ksamancore.db.entities.Ubacha;
  * @author bhaduri
  */
 public class KSCoreService {
-    
+
 //    public void getAllParva() {
 //        ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
 //        List<Parva> parvaList = parvaDAO.findParvaEntities();
 //        parvaList.stream().forEach(x->System.out.println(x.getName()));
 //    }
-    
     public ParvaDTO getParvaDTO(ParvaDTO parvaDTO) {
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(parvaDTO.getParvaId());
-        
+
         parvaDTO.setParvaId(parva.getId());
         parvaDTO.setParvaName(parva.getName());
-        
+
         return parvaDTO;
     }
-    
+
     public UbachaDTO getUbachaDTO(UbachaDTO ubachaDTO) {
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
-        
+
         ubachaDTO.setUbachaId(ubacha.getId());
         ubachaDTO.setUbachaName(ubacha.getName());
         ubachaDTO.setUbachaBachan(ubacha.getBachan());
-        
+
         return ubachaDTO;
     }
-    
+
     public MaintextPK getMaintextPK(MaintextDTO maintextDTO) {
         MaintextPK maintextPK = new MaintextPK();
-        
+
         maintextPK.setParvaId(maintextDTO.getParvaId());
         maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
         maintextPK.setShlokanum(maintextDTO.getShlokaNum());
         maintextPK.setShlokaline(maintextDTO.getShlokaLine());
-        
+
         return maintextPK;
     }
-    
-    public MaintextDTO getMaintextDTO(MaintextDTO maintextDTO) {
-        
+
+    public MaintextDTO getMaintextDTO(MaintextPK maintextPK) {
+
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
-        
-        MaintextPK maintextPK = getMaintextPK(maintextDTO);
+
         Maintext maintext = maintextDAO.findMaintext(maintextPK);
-        
+
+        MaintextDTO maintextDTO = new MaintextDTO();
+
         maintextDTO.setShlokaText(maintext.getShlokatext());
         maintextDTO.setFirstChar(maintext.getFirstchar());
         maintextDTO.setEndChar(maintext.getEndchar());
         maintextDTO.setAnubadText(maintext.getTranslatedtext());
-        
+
         return maintextDTO;
-    } 
-    
+    }
+
     public List<ParvaDTO> getParvaDTOList() {
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         List<Parva> parvaList = parvaDAO.findParvaEntities();
-        
+
         List<ParvaDTO> parvaDTOList = new ArrayList<>();
-        
-        for(int i = 0; i<parvaList.size(); i++) {
+
+        for (int i = 0; i < parvaList.size(); i++) {
             ParvaDTO parvaDTO = new ParvaDTO();
-            
+
             parvaDTO.setParvaId(parvaList.get(i).getId());
             parvaDTO.setParvaName(parvaList.get(i).getName());
-            
+
             parvaDTOList.add(parvaDTO);
         }
         return parvaDTOList;
     }
-    
+
     public List<UbachaDTO> getUbachaDTOList() {
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         List<Ubacha> ubachaList = ubachaDAO.findUbachaEntities();
-        
+
         List<UbachaDTO> ubachaDTOList = new ArrayList<>();
-        
-        for(int i=0; i<ubachaList.size(); i++) {
+
+        for (int i = 0; i < ubachaList.size(); i++) {
             UbachaDTO ubachaDTO = new UbachaDTO();
-            
+
             ubachaDTO.setUbachaId(ubachaList.get(i).getId());
             ubachaDTO.setUbachaName(ubachaList.get(i).getName());
             ubachaDTO.setUbachaBachan(ubachaList.get(i).getBachan());
-            
+
             ubachaDTOList.add(ubachaDTO);
         }
         return ubachaDTOList;
     }
-    
+
     public List<MaintextDTO> getMaintextDTOList() {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
         List<Maintext> maintextList = maintextDAO.findMaintextEntities();
-        
+
         List<MaintextDTO> maintextDTOList = new ArrayList<>();
-        
-        for(int i=0; i<maintextList.size(); i++) {
+
+        for (int i = 0; i < maintextList.size(); i++) {
             MaintextDTO maintextDTO = new MaintextDTO();
-            
+
             maintextDTO.setAdhyayId(maintextList.get(i).getMaintextPK().getAdhyayid());
             maintextDTO.setParvaId(maintextList.get(i).getMaintextPK().getParvaId());
             maintextDTO.setShlokaNum(maintextList.get(i).getMaintextPK().getShlokanum());
@@ -137,48 +139,45 @@ public class KSCoreService {
             maintextDTO.setFirstChar(maintextList.get(i).getFirstchar());
             maintextDTO.setEndChar(maintextList.get(i).getEndchar());
             maintextDTO.setLastEditTS(maintextList.get(i).getLastupdatedts());
-            
+
             maintextDTOList.add(maintextDTO);
         }
         return maintextDTOList;
     }
-    
-    
+
     //////////////////// PARVA CRUD ////////////////////
-    
-    
     public int addParva(ParvaDTO parvaDTO) {
         int responseCode;
-        
+
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = new Parva();
-        
+
         parva.setId(parvaDTO.getParvaId());
         parva.setName(parvaDTO.getParvaName());
-        
+
         try {
             parvaDAO.create(parva);
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (PreexistingEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_DUPLICATE;
-        
+
         } catch (Exception ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_SEVERE;
         }
         return responseCode;
     }
-    
+
     public int updateParva(ParvaDTO parvaDTO) {
         int responseCode;
-        
+
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(parvaDTO.getParvaId());
-        
+
         parva.setName(parvaDTO.getParvaName());
-        
+
         try {
             parvaDAO.edit(parva);
             responseCode = DGRFResponseCode.SUCCESS;
@@ -191,64 +190,63 @@ public class KSCoreService {
         }
         return responseCode;
     }
-    
+
     public int removeParva(ParvaDTO parvaDTO) {
         int responseCode;
-        
+
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(parvaDTO.getParvaId());
-        
+
         try {
             parvaDAO.destroy(parva.getId());
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_ILLEGAL_ORPHAN;
-            
+
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_NON_EXISTING;
         }
         return responseCode;
     }
-    
+
     //////////////////// UBACHA CRUD ////////////////////
-    
     public int addUbacha(UbachaDTO ubachaDTO) {
         int responseCode;
-        
+
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         Ubacha ubacha = new Ubacha();
-        
+
         ubacha.setId(ubachaDTO.getUbachaId());
         ubacha.setName(ubachaDTO.getUbachaName());
         ubacha.setBachan(ubachaDTO.getUbachaBachan());
-        
+
         try {
             ubachaDAO.create(ubacha);
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (PreexistingEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_DUPLICATE;
-        
+
         } catch (Exception ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_SEVERE;
         }
         return responseCode;
     }
-    
+
     public int updateUbacha(UbachaDTO ubachaDTO) {
         int responseCode;
-        
+
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
-        
+
         ubacha.setName(ubachaDTO.getUbachaName());
         ubacha.setBachan(ubachaDTO.getUbachaBachan());
-        
+
         try {
             ubachaDAO.edit(ubacha);
             responseCode = DGRFResponseCode.SUCCESS;
@@ -261,65 +259,133 @@ public class KSCoreService {
         }
         return responseCode;
     }
-    
-    
+
     public int removeUbacha(UbachaDTO ubachaDTO) {
         int responseCode;
-        
+
         UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
         Ubacha ubacha = ubachaDAO.findUbacha(ubachaDTO.getUbachaId());
-        
+
         try {
             ubachaDAO.destroy(ubacha.getId());
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_ILLEGAL_ORPHAN;
-            
+
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_NON_EXISTING;
         }
         return responseCode;
     }
-    
-    
+
     //////////////////// MAINTEXT OPERATIONS ////////////////////
-    
     public List<MaintextDTO> getAdhyayIdList(int parvaId) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
 
         List<Integer> adhyayList = maintextDAO.getAdhyayByParvaId(parvaId);
         List<MaintextDTO> adhyayDTOList = new ArrayList<>();
-        
+
         for (int i = 0; i < adhyayList.size(); i++) {
-            
+
             MaintextDTO maintextDTO = new MaintextDTO();
-            
+
             maintextDTO.setAdhyayId(adhyayList.get(i));
-            
+
             adhyayDTOList.add(maintextDTO);
         }
         return adhyayDTOList;
     }
-    
+
     public List<MaintextDTO> getShlokaList(int parvaId, int adhyayId) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
 
         List<Maintext> shlokaList = maintextDAO.getShlokaByParvaAndAdhyayId(parvaId, adhyayId);
         List<MaintextDTO> shlokaDTOList = new ArrayList<>();
-        
+        UbachaDTO ubachaDTO = new UbachaDTO();
+
         for (int i = 0; i < shlokaList.size(); i++) {
             MaintextDTO shlokaDTO = new MaintextDTO();
-            
+
+            ubachaDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
+            UbachaDTO ubachaData = getUbachaDTO(ubachaDTO);
+
+            shlokaDTO.setUbachaName(ubachaData.getUbachaName());
+            shlokaDTO.setUbachaBachan(ubachaData.getUbachaBachan());
             shlokaDTO.setShlokaText(shlokaList.get(i).getShlokatext());
             shlokaDTO.setShlokaLine(shlokaList.get(i).getMaintextPK().getShlokaline());
             shlokaDTO.setShlokaNum(shlokaList.get(i).getMaintextPK().getShlokanum());
             shlokaDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
-            
+
             shlokaDTOList.add(shlokaDTO);
         }
         return shlokaDTOList;
+    }
+    
+    public int getMaxShlokaNumber(MaintextDTO maintextDTO) {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        int maintextMaxShlokaNum;
+        
+        maintextMaxShlokaNum = maintextDAO.getMaxShlokaNum(maintextDTO.getParvaId(), maintextDTO.getAdhyayId());
+        
+        return maintextMaxShlokaNum;
+    }
+    
+    public int getMaxShlokaLine(MaintextDTO maintextDTO) {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        int maintextMaxShlokaLine;
+        
+        maintextMaxShlokaLine = maintextDAO.getMaxShlokaLine(maintextDTO.getParvaId(), maintextDTO.getAdhyayId(), maintextDTO.getMaxShlokaNum());
+        
+        return maintextMaxShlokaLine;
+    }
+
+    public int addNewShloka(MaintextDTO maintextDTO) {
+        int responseCode;
+        
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        MaintextPK maintextPK = new MaintextPK();
+        Maintext maintext = new Maintext();
+        Date createdDate = new Date();
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        Ubacha ubacha = ubachaDAO.findUbacha(maintextDTO.getUbachaId());
+        ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
+        Parva parva = parvaDAO.findParva(maintextDTO.getParvaId());
+        
+        maintextPK.setParvaId(maintextDTO.getParvaId());
+        maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
+        maintextPK.setShlokaline(maintextDTO.getShlokaLine());
+        maintextPK.setShlokanum(maintextDTO.getShlokaNum());
+        
+        maintext.setMaintextPK(maintextPK);
+        maintext.setUbachaId(ubacha);
+        maintext.setShlokatext(maintextDTO.getShlokaText());
+        maintext.setTranslatedtext(maintextDTO.getAnubadText());
+        maintext.setLastupdatedts(createdDate);
+        maintext.setParva(parva);
+        
+        String startChar = maintextDTO.getShlokaText();
+        String endChar = maintextDTO.getEndChar();
+        
+        maintext.setFirstchar(Character.toString(startChar.charAt(0)));
+        maintext.setEndchar(endChar);
+        
+        try {
+            maintextDAO.create(maintext);
+            responseCode = DGRFResponseCode.SUCCESS;
+
+        } catch (PreexistingEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_DUPLICATE;
+
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
     }
 }

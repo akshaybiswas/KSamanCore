@@ -38,4 +38,23 @@ public class MaintextDAO extends MaintextJpaController {
         List<Maintext> shlokaList = query.getResultList();
         return shlokaList;
     }
+    
+    public Integer getMaxShlokaNum(int parvaId, int adhyayId) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> query = em.createNamedQuery("Maintext.findMaxShlokaNum", Integer.class);
+        query.setParameter("parvaId", parvaId);
+        query.setParameter("adhyayId", adhyayId);
+        Integer maxShlokaNum = query.getSingleResult();
+        return maxShlokaNum;
+    }
+    
+    public Integer getMaxShlokaLine(int parvaId, int adhyayId, int shlokaNum) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> query = em.createNamedQuery("Maintext.findMaxShlokaLine", Integer.class);
+        query.setParameter("parvaId", parvaId);
+        query.setParameter("adhyayId", adhyayId);
+        query.setParameter("shlokaNum", shlokaNum);
+        Integer maxShlokaLine = query.getSingleResult();
+        return maxShlokaLine;
+    }
 }
