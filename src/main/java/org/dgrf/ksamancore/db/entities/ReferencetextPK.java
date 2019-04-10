@@ -30,18 +30,18 @@ public class ReferencetextPK implements Serializable {
     @Column(name = "maintext_shlokaline")
     private int maintextShlokaline;
     @Basic(optional = false)
-    @Column(name = "positionintranstext")
-    private int positionintranstext;
+    @Column(name = "reftextid")
+    private int reftextid;
 
     public ReferencetextPK() {
     }
 
-    public ReferencetextPK(int maintextParvaId, int maintextAdhyayid, int maintextShlokanum, int maintextShlokaline, int positionintranstext) {
+    public ReferencetextPK(int maintextParvaId, int maintextAdhyayid, int maintextShlokanum, int maintextShlokaline, int reftextid) {
         this.maintextParvaId = maintextParvaId;
         this.maintextAdhyayid = maintextAdhyayid;
         this.maintextShlokanum = maintextShlokanum;
         this.maintextShlokaline = maintextShlokaline;
-        this.positionintranstext = positionintranstext;
+        this.reftextid = reftextid;
     }
 
     public int getMaintextParvaId() {
@@ -76,12 +76,12 @@ public class ReferencetextPK implements Serializable {
         this.maintextShlokaline = maintextShlokaline;
     }
 
-    public int getPositionintranstext() {
-        return positionintranstext;
+    public int getReftextid() {
+        return reftextid;
     }
 
-    public void setPositionintranstext(int positionintranstext) {
-        this.positionintranstext = positionintranstext;
+    public void setReftextid(int reftextid) {
+        this.reftextid = reftextid;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ReferencetextPK implements Serializable {
         hash += (int) maintextAdhyayid;
         hash += (int) maintextShlokanum;
         hash += (int) maintextShlokaline;
-        hash += (int) positionintranstext;
+        hash += (int) reftextid;
         return hash;
     }
 
@@ -114,7 +114,7 @@ public class ReferencetextPK implements Serializable {
         if (this.maintextShlokaline != other.maintextShlokaline) {
             return false;
         }
-        if (this.positionintranstext != other.positionintranstext) {
+        if (this.reftextid != other.reftextid) {
             return false;
         }
         return true;
@@ -122,7 +122,7 @@ public class ReferencetextPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.dgrf.ksamancore.db.entities.ReferencetextPK[ maintextParvaId=" + maintextParvaId + ", maintextAdhyayid=" + maintextAdhyayid + ", maintextShlokanum=" + maintextShlokanum + ", maintextShlokaline=" + maintextShlokaline + ", positionintranstext=" + positionintranstext + " ]";
+        return "org.dgrf.ksamancore.db.entities.ReferencetextPK[ maintextParvaId=" + maintextParvaId + ", maintextAdhyayid=" + maintextAdhyayid + ", maintextShlokanum=" + maintextShlokanum + ", maintextShlokaline=" + maintextShlokaline + ", reftextid=" + reftextid + " ]";
     }
     
 }

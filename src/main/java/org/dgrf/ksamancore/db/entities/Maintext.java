@@ -6,8 +6,8 @@
 package org.dgrf.ksamancore.db.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,8 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "maintext")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Maintext.findAll", query = "SELECT m FROM Maintext m")
-})
+    @NamedQuery(name = "Maintext.findAll", query = "SELECT m FROM Maintext m")})
 public class Maintext implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,9 +57,9 @@ public class Maintext implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastupdatedts;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintext")
-    private Collection<Referencetext> referencetextCollection;
+    private List<Referencetext> referencetextList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "maintext")
-    private Collection<Words> wordsCollection;
+    private List<Words> wordsList;
     @JoinColumn(name = "parva_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Parva parva;
@@ -136,21 +135,21 @@ public class Maintext implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Referencetext> getReferencetextCollection() {
-        return referencetextCollection;
+    public List<Referencetext> getReferencetextList() {
+        return referencetextList;
     }
 
-    public void setReferencetextCollection(Collection<Referencetext> referencetextCollection) {
-        this.referencetextCollection = referencetextCollection;
+    public void setReferencetextList(List<Referencetext> referencetextList) {
+        this.referencetextList = referencetextList;
     }
 
     @XmlTransient
-    public Collection<Words> getWordsCollection() {
-        return wordsCollection;
+    public List<Words> getWordsList() {
+        return wordsList;
     }
 
-    public void setWordsCollection(Collection<Words> wordsCollection) {
-        this.wordsCollection = wordsCollection;
+    public void setWordsList(List<Words> wordsList) {
+        this.wordsList = wordsList;
     }
 
     public Parva getParva() {

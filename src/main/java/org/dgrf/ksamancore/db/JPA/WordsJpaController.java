@@ -39,9 +39,9 @@ public class WordsJpaController implements Serializable {
             words.setWordsPK(new WordsPK());
         }
         words.getWordsPK().setMaintextShlokanum(words.getMaintext().getMaintextPK().getShlokanum());
+        words.getWordsPK().setMaintextShlokaline(words.getMaintext().getMaintextPK().getShlokaline());
         words.getWordsPK().setMaintextAdhyayid(words.getMaintext().getMaintextPK().getAdhyayid());
         words.getWordsPK().setMaintextParvaId(words.getMaintext().getMaintextPK().getParvaId());
-        words.getWordsPK().setMaintextShlokaline(words.getMaintext().getMaintextPK().getShlokaline());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -53,7 +53,7 @@ public class WordsJpaController implements Serializable {
             }
             em.persist(words);
             if (maintext != null) {
-                maintext.getWordsCollection().add(words);
+                maintext.getWordsList().add(words);
                 maintext = em.merge(maintext);
             }
             em.getTransaction().commit();
@@ -71,9 +71,9 @@ public class WordsJpaController implements Serializable {
 
     public void edit(Words words) throws NonexistentEntityException, Exception {
         words.getWordsPK().setMaintextShlokanum(words.getMaintext().getMaintextPK().getShlokanum());
+        words.getWordsPK().setMaintextShlokaline(words.getMaintext().getMaintextPK().getShlokaline());
         words.getWordsPK().setMaintextAdhyayid(words.getMaintext().getMaintextPK().getAdhyayid());
         words.getWordsPK().setMaintextParvaId(words.getMaintext().getMaintextPK().getParvaId());
-        words.getWordsPK().setMaintextShlokaline(words.getMaintext().getMaintextPK().getShlokaline());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -87,11 +87,11 @@ public class WordsJpaController implements Serializable {
             }
             words = em.merge(words);
             if (maintextOld != null && !maintextOld.equals(maintextNew)) {
-                maintextOld.getWordsCollection().remove(words);
+                maintextOld.getWordsList().remove(words);
                 maintextOld = em.merge(maintextOld);
             }
             if (maintextNew != null && !maintextNew.equals(maintextOld)) {
-                maintextNew.getWordsCollection().add(words);
+                maintextNew.getWordsList().add(words);
                 maintextNew = em.merge(maintextNew);
             }
             em.getTransaction().commit();
@@ -125,7 +125,7 @@ public class WordsJpaController implements Serializable {
             }
             Maintext maintext = words.getMaintext();
             if (maintext != null) {
-                maintext.getWordsCollection().remove(words);
+                maintext.getWordsList().remove(words);
                 maintext = em.merge(maintext);
             }
             em.remove(words);

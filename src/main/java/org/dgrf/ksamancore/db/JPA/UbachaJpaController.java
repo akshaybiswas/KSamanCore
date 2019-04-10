@@ -12,7 +12,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import org.dgrf.ksamancore.db.entities.Maintext;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,27 +36,27 @@ public class UbachaJpaController implements Serializable {
     }
 
     public void create(Ubacha ubacha) throws PreexistingEntityException, Exception {
-        if (ubacha.getMaintextCollection() == null) {
-            ubacha.setMaintextCollection(new ArrayList<Maintext>());
+        if (ubacha.getMaintextList() == null) {
+            ubacha.setMaintextList(new ArrayList<Maintext>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Collection<Maintext> attachedMaintextCollection = new ArrayList<Maintext>();
-            for (Maintext maintextCollectionMaintextToAttach : ubacha.getMaintextCollection()) {
-                maintextCollectionMaintextToAttach = em.getReference(maintextCollectionMaintextToAttach.getClass(), maintextCollectionMaintextToAttach.getMaintextPK());
-                attachedMaintextCollection.add(maintextCollectionMaintextToAttach);
+            List<Maintext> attachedMaintextList = new ArrayList<Maintext>();
+            for (Maintext maintextListMaintextToAttach : ubacha.getMaintextList()) {
+                maintextListMaintextToAttach = em.getReference(maintextListMaintextToAttach.getClass(), maintextListMaintextToAttach.getMaintextPK());
+                attachedMaintextList.add(maintextListMaintextToAttach);
             }
-            ubacha.setMaintextCollection(attachedMaintextCollection);
+            ubacha.setMaintextList(attachedMaintextList);
             em.persist(ubacha);
-            for (Maintext maintextCollectionMaintext : ubacha.getMaintextCollection()) {
-                Ubacha oldUbachaIdOfMaintextCollectionMaintext = maintextCollectionMaintext.getUbachaId();
-                maintextCollectionMaintext.setUbachaId(ubacha);
-                maintextCollectionMaintext = em.merge(maintextCollectionMaintext);
-                if (oldUbachaIdOfMaintextCollectionMaintext != null) {
-                    oldUbachaIdOfMaintextCollectionMaintext.getMaintextCollection().remove(maintextCollectionMaintext);
-                    oldUbachaIdOfMaintextCollectionMaintext = em.merge(oldUbachaIdOfMaintextCollectionMaintext);
+            for (Maintext maintextListMaintext : ubacha.getMaintextList()) {
+                Ubacha oldUbachaIdOfMaintextListMaintext = maintextListMaintext.getUbachaId();
+                maintextListMaintext.setUbachaId(ubacha);
+                maintextListMaintext = em.merge(maintextListMaintext);
+                if (oldUbachaIdOfMaintextListMaintext != null) {
+                    oldUbachaIdOfMaintextListMaintext.getMaintextList().remove(maintextListMaintext);
+                    oldUbachaIdOfMaintextListMaintext = em.merge(oldUbachaIdOfMaintextListMaintext);
                 }
             }
             em.getTransaction().commit();
@@ -79,36 +78,36 @@ public class UbachaJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Ubacha persistentUbacha = em.find(Ubacha.class, ubacha.getId());
-            Collection<Maintext> maintextCollectionOld = persistentUbacha.getMaintextCollection();
-            Collection<Maintext> maintextCollectionNew = ubacha.getMaintextCollection();
+            List<Maintext> maintextListOld = persistentUbacha.getMaintextList();
+            List<Maintext> maintextListNew = ubacha.getMaintextList();
             List<String> illegalOrphanMessages = null;
-            for (Maintext maintextCollectionOldMaintext : maintextCollectionOld) {
-                if (!maintextCollectionNew.contains(maintextCollectionOldMaintext)) {
+            for (Maintext maintextListOldMaintext : maintextListOld) {
+                if (!maintextListNew.contains(maintextListOldMaintext)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Maintext " + maintextCollectionOldMaintext + " since its ubachaId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Maintext " + maintextListOldMaintext + " since its ubachaId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Collection<Maintext> attachedMaintextCollectionNew = new ArrayList<Maintext>();
-            for (Maintext maintextCollectionNewMaintextToAttach : maintextCollectionNew) {
-                maintextCollectionNewMaintextToAttach = em.getReference(maintextCollectionNewMaintextToAttach.getClass(), maintextCollectionNewMaintextToAttach.getMaintextPK());
-                attachedMaintextCollectionNew.add(maintextCollectionNewMaintextToAttach);
+            List<Maintext> attachedMaintextListNew = new ArrayList<Maintext>();
+            for (Maintext maintextListNewMaintextToAttach : maintextListNew) {
+                maintextListNewMaintextToAttach = em.getReference(maintextListNewMaintextToAttach.getClass(), maintextListNewMaintextToAttach.getMaintextPK());
+                attachedMaintextListNew.add(maintextListNewMaintextToAttach);
             }
-            maintextCollectionNew = attachedMaintextCollectionNew;
-            ubacha.setMaintextCollection(maintextCollectionNew);
+            maintextListNew = attachedMaintextListNew;
+            ubacha.setMaintextList(maintextListNew);
             ubacha = em.merge(ubacha);
-            for (Maintext maintextCollectionNewMaintext : maintextCollectionNew) {
-                if (!maintextCollectionOld.contains(maintextCollectionNewMaintext)) {
-                    Ubacha oldUbachaIdOfMaintextCollectionNewMaintext = maintextCollectionNewMaintext.getUbachaId();
-                    maintextCollectionNewMaintext.setUbachaId(ubacha);
-                    maintextCollectionNewMaintext = em.merge(maintextCollectionNewMaintext);
-                    if (oldUbachaIdOfMaintextCollectionNewMaintext != null && !oldUbachaIdOfMaintextCollectionNewMaintext.equals(ubacha)) {
-                        oldUbachaIdOfMaintextCollectionNewMaintext.getMaintextCollection().remove(maintextCollectionNewMaintext);
-                        oldUbachaIdOfMaintextCollectionNewMaintext = em.merge(oldUbachaIdOfMaintextCollectionNewMaintext);
+            for (Maintext maintextListNewMaintext : maintextListNew) {
+                if (!maintextListOld.contains(maintextListNewMaintext)) {
+                    Ubacha oldUbachaIdOfMaintextListNewMaintext = maintextListNewMaintext.getUbachaId();
+                    maintextListNewMaintext.setUbachaId(ubacha);
+                    maintextListNewMaintext = em.merge(maintextListNewMaintext);
+                    if (oldUbachaIdOfMaintextListNewMaintext != null && !oldUbachaIdOfMaintextListNewMaintext.equals(ubacha)) {
+                        oldUbachaIdOfMaintextListNewMaintext.getMaintextList().remove(maintextListNewMaintext);
+                        oldUbachaIdOfMaintextListNewMaintext = em.merge(oldUbachaIdOfMaintextListNewMaintext);
                     }
                 }
             }
@@ -142,12 +141,12 @@ public class UbachaJpaController implements Serializable {
                 throw new NonexistentEntityException("The ubacha with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Collection<Maintext> maintextCollectionOrphanCheck = ubacha.getMaintextCollection();
-            for (Maintext maintextCollectionOrphanCheckMaintext : maintextCollectionOrphanCheck) {
+            List<Maintext> maintextListOrphanCheck = ubacha.getMaintextList();
+            for (Maintext maintextListOrphanCheckMaintext : maintextListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Ubacha (" + ubacha + ") cannot be destroyed since the Maintext " + maintextCollectionOrphanCheckMaintext + " in its maintextCollection field has a non-nullable ubachaId field.");
+                illegalOrphanMessages.add("This Ubacha (" + ubacha + ") cannot be destroyed since the Maintext " + maintextListOrphanCheckMaintext + " in its maintextList field has a non-nullable ubachaId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

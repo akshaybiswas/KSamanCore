@@ -6,7 +6,7 @@
 package org.dgrf.ksamancore.db.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +42,7 @@ public class Ubacha implements Serializable {
     @Column(name = "bachan")
     private String bachan;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ubachaId")
-    private Collection<Maintext> maintextCollection;
+    private List<Maintext> maintextList;
 
     public Ubacha() {
     }
@@ -82,12 +82,12 @@ public class Ubacha implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Maintext> getMaintextCollection() {
-        return maintextCollection;
+    public List<Maintext> getMaintextList() {
+        return maintextList;
     }
 
-    public void setMaintextCollection(Collection<Maintext> maintextCollection) {
-        this.maintextCollection = maintextCollection;
+    public void setMaintextList(List<Maintext> maintextList) {
+        this.maintextList = maintextList;
     }
 
     @Override

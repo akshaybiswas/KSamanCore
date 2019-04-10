@@ -37,6 +37,8 @@ public class Referencetext implements Serializable {
     @Lob
     @Column(name = "text")
     private String text;
+    @Column(name = "referencetextpos")
+    private Integer referencetextpos;
     @JoinColumns({
         @JoinColumn(name = "maintext_parva_id", referencedColumnName = "parva_id", insertable = false, updatable = false),
         @JoinColumn(name = "maintext_adhyayid", referencedColumnName = "adhyayid", insertable = false, updatable = false),
@@ -57,8 +59,8 @@ public class Referencetext implements Serializable {
         this.text = text;
     }
 
-    public Referencetext(int maintextParvaId, int maintextAdhyayid, int maintextShlokanum, int maintextShlokaline, int positionintranstext) {
-        this.referencetextPK = new ReferencetextPK(maintextParvaId, maintextAdhyayid, maintextShlokanum, maintextShlokaline, positionintranstext);
+    public Referencetext(int maintextParvaId, int maintextAdhyayid, int maintextShlokanum, int maintextShlokaline, int reftextid) {
+        this.referencetextPK = new ReferencetextPK(maintextParvaId, maintextAdhyayid, maintextShlokanum, maintextShlokaline, reftextid);
     }
 
     public ReferencetextPK getReferencetextPK() {
@@ -75,6 +77,14 @@ public class Referencetext implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getReferencetextpos() {
+        return referencetextpos;
+    }
+
+    public void setReferencetextpos(Integer referencetextpos) {
+        this.referencetextpos = referencetextpos;
     }
 
     public Maintext getMaintext() {

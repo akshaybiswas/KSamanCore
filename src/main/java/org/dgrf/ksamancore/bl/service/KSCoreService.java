@@ -69,18 +69,20 @@ public class KSCoreService {
         return maintextPK;
     }
 
-    public MaintextDTO getMaintextDTO(MaintextPK maintextPK) {
+    public MaintextDTO getMaintextDTO(MaintextDTO maintextDTO) {
 
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        MaintextPK maintextPK = getMaintextPK(maintextDTO);
 
         Maintext maintext = maintextDAO.findMaintext(maintextPK);
-
-        MaintextDTO maintextDTO = new MaintextDTO();
 
         maintextDTO.setShlokaText(maintext.getShlokatext());
         maintextDTO.setFirstChar(maintext.getFirstchar());
         maintextDTO.setEndChar(maintext.getEndchar());
         maintextDTO.setAnubadText(maintext.getTranslatedtext());
+        maintextDTO.setUbachaId(maintext.getUbachaId().getId());
+        maintextDTO.setUbachaName(maintext.getUbachaId().getName());
+        maintextDTO.setUbachaBachan(maintext.getUbachaId().getBachan());
 
         return maintextDTO;
     }
@@ -323,30 +325,30 @@ public class KSCoreService {
         }
         return shlokaDTOList;
     }
-    
+
     public int getMaxShlokaNumber(MaintextDTO maintextDTO) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
-        
+
         int maintextMaxShlokaNum;
-        
+
         maintextMaxShlokaNum = maintextDAO.getMaxShlokaNum(maintextDTO.getParvaId(), maintextDTO.getAdhyayId());
-        
+
         return maintextMaxShlokaNum;
     }
-    
+
     public int getMaxShlokaLine(MaintextDTO maintextDTO) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
-        
+
         int maintextMaxShlokaLine;
-        
+
         maintextMaxShlokaLine = maintextDAO.getMaxShlokaLine(maintextDTO.getParvaId(), maintextDTO.getAdhyayId(), maintextDTO.getMaxShlokaNum());
-        
+
         return maintextMaxShlokaLine;
     }
 
     public int addNewShloka(MaintextDTO maintextDTO) {
         int responseCode;
-        
+
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
         MaintextPK maintextPK = new MaintextPK();
         Maintext maintext = new Maintext();
@@ -355,25 +357,25 @@ public class KSCoreService {
         Ubacha ubacha = ubachaDAO.findUbacha(maintextDTO.getUbachaId());
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(maintextDTO.getParvaId());
-        
+
         maintextPK.setParvaId(maintextDTO.getParvaId());
         maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
         maintextPK.setShlokaline(maintextDTO.getShlokaLine());
         maintextPK.setShlokanum(maintextDTO.getShlokaNum());
-        
+
         maintext.setMaintextPK(maintextPK);
         maintext.setUbachaId(ubacha);
         maintext.setShlokatext(maintextDTO.getShlokaText());
         maintext.setTranslatedtext(maintextDTO.getAnubadText());
         maintext.setLastupdatedts(createdDate);
         maintext.setParva(parva);
-        
+
         String startChar = maintextDTO.getShlokaText();
         String endChar = maintextDTO.getEndChar();
-        
+
         maintext.setFirstchar(Character.toString(startChar.charAt(0)));
         maintext.setEndchar(endChar);
-        
+
         try {
             maintextDAO.create(maintext);
             responseCode = DGRFResponseCode.SUCCESS;
@@ -385,6 +387,81 @@ public class KSCoreService {
         } catch (Exception ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
+    }
+
+    public int updateShloka(MaintextDTO maintextDTO) {
+        int responseCode;
+
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        MaintextPK maintextPK = new MaintextPK();
+        Date updatedDate = new Date();
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        Ubacha ubacha = ubachaDAO.findUbacha(maintextDTO.getUbachaId());
+        ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
+        Parva parva = parvaDAO.findParva(maintextDTO.getParvaId());
+
+        maintextPK.setParvaId(maintextDTO.getParvaId());
+        maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
+        maintextPK.setShlokaline(maintextDTO.getShlokaLine());
+        maintextPK.setShlokanum(maintextDTO.getShlokaNum());
+
+        Maintext maintext = maintextDAO.findMaintext(maintextPK);
+
+        maintext.setMaintextPK(maintextPK);
+        maintext.setUbachaId(ubacha);
+        maintext.setShlokatext(maintextDTO.getShlokaText());
+        maintext.setTranslatedtext(maintextDTO.getAnubadText());
+        maintext.setLastupdatedts(updatedDate);
+        maintext.setParva(parva);
+
+        String startChar = maintextDTO.getShlokaText();
+        String endChar = maintextDTO.getEndChar();
+
+        maintext.setFirstchar(Character.toString(startChar.charAt(0)));
+        maintext.setEndchar(endChar);
+
+        try {
+            maintextDAO.edit(maintext);
+            responseCode = DGRFResponseCode.SUCCESS;
+            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_NON_EXISTING;
+            
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
+    }
+    
+    public int removeShloka(MaintextDTO maintextDTO){
+        int responseCode;
+
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        MaintextPK maintextPK = new MaintextPK();
+
+        maintextPK.setParvaId(maintextDTO.getParvaId());
+        maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
+        maintextPK.setShlokaline(maintextDTO.getShlokaLine());
+        maintextPK.setShlokanum(maintextDTO.getShlokaNum());
+
+        Maintext maintext = maintextDAO.findMaintext(maintextPK);
+
+        try {
+            maintextDAO.destroy(maintext.getMaintextPK());
+            responseCode = DGRFResponseCode.SUCCESS;
+            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_NON_EXISTING;
+            
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_ILLEGAL_ORPHAN;
+
         }
         return responseCode;
     }
