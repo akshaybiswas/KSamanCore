@@ -16,5 +16,8 @@
         <query>SELECT MAX(a.maintextPK.shlokaline) FROM Maintext a WHERE a.maintextPK.parvaId = :parvaId AND a.maintextPK.adhyayid = :adhyayId AND a.maintextPK.shlokanum = :shlokaNum</query>
     </named-query>
     
+    <named-query name="Words.deleteAllWordsAndChars">
+        <query>DELETE FROM Words s WHERE s.wordsPK.maintextParvaId = :parvaId AND s.wordsPK.maintextAdhyayid = :adhyayId AND s.wordsPK.maintextShlokanum = :shlokaNum AND s.wordsPK.maintextShlokaline = :shlokaLine</query>
+    </named-query>
     
 </entity-mappings>

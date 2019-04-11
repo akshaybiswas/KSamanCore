@@ -6,6 +6,7 @@
 package org.dgrf.ksamancore.bl.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,9 +16,11 @@ import org.dgrf.cloud.response.DGRFResponseCode;
 import org.dgrf.ksamancore.DTO.MaintextDTO;
 import org.dgrf.ksamancore.DTO.ParvaDTO;
 import org.dgrf.ksamancore.DTO.UbachaDTO;
+import org.dgrf.ksamancore.DTO.WordsDTO;
 import org.dgrf.ksamancore.db.DAO.MaintextDAO;
 import org.dgrf.ksamancore.db.DAO.ParvaDAO;
 import org.dgrf.ksamancore.db.DAO.UbachaDAO;
+import org.dgrf.ksamancore.db.DAO.WordsDAO;
 import org.dgrf.ksamancore.db.JPA.exceptions.IllegalOrphanException;
 import org.dgrf.ksamancore.db.JPA.exceptions.NonexistentEntityException;
 import org.dgrf.ksamancore.db.JPA.exceptions.PreexistingEntityException;
@@ -25,6 +28,8 @@ import org.dgrf.ksamancore.db.entities.Maintext;
 import org.dgrf.ksamancore.db.entities.MaintextPK;
 import org.dgrf.ksamancore.db.entities.Parva;
 import org.dgrf.ksamancore.db.entities.Ubacha;
+import org.dgrf.ksamancore.db.entities.Words;
+import org.dgrf.ksamancore.db.entities.WordsPK;
 
 /**
  *
@@ -56,6 +61,30 @@ public class KSCoreService {
         ubachaDTO.setUbachaBachan(ubacha.getBachan());
 
         return ubachaDTO;
+    }
+
+    public WordsPK getWordsPK(WordsDTO wordsDTO) {
+        WordsPK wordsPK = new WordsPK();
+
+        wordsPK.setMaintextParvaId(wordsDTO.getParvaId());
+        wordsPK.setMaintextAdhyayid(wordsDTO.getAdhyayId());
+        wordsPK.setMaintextShlokanum(wordsDTO.getShlokaNum());
+        wordsPK.setMaintextShlokaline(wordsDTO.getShlokaLine());
+        wordsPK.setWordnum(wordsDTO.getWordNum());
+
+        return wordsPK;
+    }
+
+    public WordsDTO getWordsDTO(WordsDTO wordsDTO) {
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        WordsPK wordsPK = getWordsPK(wordsDTO);
+
+        Words words = wordsDAO.findWords(wordsPK);
+
+        wordsDTO.setWordText(words.getWordtext());
+        wordsDTO.setWordFirstChar(words.getFirstchar());
+
+        return wordsDTO;
     }
 
     public MaintextPK getMaintextPK(MaintextDTO maintextDTO) {
@@ -120,6 +149,28 @@ public class KSCoreService {
             ubachaDTOList.add(ubachaDTO);
         }
         return ubachaDTOList;
+    }
+
+    public List<WordsDTO> getWordsDTOList() {
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        List<Words> wordsList = wordsDAO.findWordsEntities();
+
+        List<WordsDTO> wordsDTOList = new ArrayList<>();
+
+        for (int i = 0; i < wordsList.size(); i++) {
+            WordsDTO wordsDTO = new WordsDTO();
+
+            wordsDTO.setAdhyayId(wordsList.get(i).getWordsPK().getMaintextAdhyayid());
+            wordsDTO.setParvaId(wordsList.get(i).getWordsPK().getMaintextParvaId());
+            wordsDTO.setShlokaNum(wordsList.get(i).getWordsPK().getMaintextShlokanum());
+            wordsDTO.setShlokaLine(wordsList.get(i).getWordsPK().getMaintextShlokaline());
+            wordsDTO.setWordNum(wordsList.get(i).getWordsPK().getWordnum());
+            wordsDTO.setWordText(wordsList.get(i).getWordtext());
+            wordsDTO.setWordFirstChar(wordsList.get(i).getFirstchar());
+
+            wordsDTOList.add(wordsDTO);
+        }
+        return wordsDTOList;
     }
 
     public List<MaintextDTO> getMaintextDTOList() {
@@ -283,6 +334,36 @@ public class KSCoreService {
         return responseCode;
     }
 
+    //////////////////// WORDS OPERATIONS ////////////////////
+    public void insertWordsToWordsTable(Maintext maintext) {
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+
+        String shloka = maintext.getShlokatext().trim();
+        String[] shlokaWords = shloka.split(" ");
+
+        for (int i = 0; i < shlokaWords.length; i++) {
+
+            Words words = new Words();
+            WordsPK wordsPK = new WordsPK();
+
+            wordsPK.setMaintextParvaId(maintext.getMaintextPK().getParvaId());
+            wordsPK.setMaintextAdhyayid(maintext.getMaintextPK().getAdhyayid());
+            wordsPK.setMaintextShlokanum(maintext.getMaintextPK().getShlokanum());
+            wordsPK.setMaintextShlokaline(maintext.getMaintextPK().getShlokaline());
+            wordsPK.setWordnum(i);
+            words.setWordsPK(wordsPK);
+            words.setMaintext(maintext);
+            words.setFirstchar(Character.toString(shlokaWords[i].charAt(0)));
+            words.setWordtext(shlokaWords[i]);
+
+            try {
+                wordsDAO.create(words);
+            } catch (Exception ex) {
+                Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     //////////////////// MAINTEXT OPERATIONS ////////////////////
     public List<MaintextDTO> getAdhyayIdList(int parvaId) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
@@ -378,6 +459,7 @@ public class KSCoreService {
 
         try {
             maintextDAO.create(maintext);
+            insertWordsToWordsTable(maintext);
             responseCode = DGRFResponseCode.SUCCESS;
 
         } catch (PreexistingEntityException ex) {
@@ -425,22 +507,23 @@ public class KSCoreService {
         try {
             maintextDAO.edit(maintext);
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_NON_EXISTING;
-            
+
         } catch (Exception ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_SEVERE;
         }
         return responseCode;
     }
-    
-    public int removeShloka(MaintextDTO maintextDTO){
+
+    public int removeShloka(MaintextDTO maintextDTO) {
         int responseCode;
 
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
         MaintextPK maintextPK = new MaintextPK();
 
         maintextPK.setParvaId(maintextDTO.getParvaId());
@@ -449,15 +532,15 @@ public class KSCoreService {
         maintextPK.setShlokanum(maintextDTO.getShlokaNum());
 
         Maintext maintext = maintextDAO.findMaintext(maintextPK);
-
         try {
+            wordsDAO.deleteAllWordsAndChars(maintextDTO.getParvaId(), maintextDTO.getAdhyayId(), maintextDTO.getShlokaNum(), maintextDTO.getShlokaLine());
             maintextDAO.destroy(maintext.getMaintextPK());
             responseCode = DGRFResponseCode.SUCCESS;
-            
+
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_NON_EXISTING;
-            
+
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
             responseCode = DGRFResponseCode.DB_ILLEGAL_ORPHAN;
