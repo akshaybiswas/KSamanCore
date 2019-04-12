@@ -443,6 +443,7 @@ public class KSCoreService {
             translationDTO.setUbachaName(ubachaData.getUbachaName());
             translationDTO.setUbachaBachan(ubachaData.getUbachaBachan());
             translationDTO.setShlokaText(shlokaList.get(i).getShlokatext());
+            translationDTO.setAdhyayId(shlokaList.get(i).getMaintextPK().getAdhyayid());
             translationDTO.setShlokaLine(shlokaList.get(i).getMaintextPK().getShlokaline());
             translationDTO.setShlokaNum(shlokaList.get(i).getMaintextPK().getShlokanum());
             translationDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
