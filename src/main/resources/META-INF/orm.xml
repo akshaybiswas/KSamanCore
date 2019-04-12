@@ -20,4 +20,8 @@
         <query>DELETE FROM Words s WHERE s.wordsPK.maintextParvaId = :parvaId AND s.wordsPK.maintextAdhyayid = :adhyayId AND s.wordsPK.maintextShlokanum = :shlokaNum AND s.wordsPK.maintextShlokaline = :shlokaLine</query>
     </named-query>
     
+    <named-query name="Maintext.findShlokTranslation">
+        <query>SELECT m FROM Maintext m WHERE m.maintextPK.parvaId = :parvaId AND m.maintextPK.adhyayid = :adhyayId AND m.maintextPK.shlokanum = :shlokaNum</query>
+    </named-query>
+    
 </entity-mappings>

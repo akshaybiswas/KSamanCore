@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import org.dgrf.cloud.response.DGRFResponseCode;
 import org.dgrf.ksamancore.DTO.MaintextDTO;
 import org.dgrf.ksamancore.DTO.ParvaDTO;
@@ -365,6 +364,7 @@ public class KSCoreService {
     }
 
     //////////////////// MAINTEXT OPERATIONS ////////////////////
+    
     public List<MaintextDTO> getAdhyayIdList(int parvaId) {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
 
@@ -426,6 +426,33 @@ public class KSCoreService {
 
         return maintextMaxShlokaLine;
     }
+    
+    public List<MaintextDTO> getMaintextTranslation(int parvaId, int adhyayId, int shlokaNum) {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        List<Maintext> shlokaList = maintextDAO.getShlokaTranslation(parvaId, adhyayId, shlokaNum);
+        List<MaintextDTO> translationDTOList = new ArrayList<>();
+        UbachaDTO ubachaDTO = new UbachaDTO();
+
+        for (int i = 0; i < shlokaList.size(); i++) {
+            MaintextDTO translationDTO = new MaintextDTO();
+
+            ubachaDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
+            UbachaDTO ubachaData = getUbachaDTO(ubachaDTO);
+
+            translationDTO.setUbachaName(ubachaData.getUbachaName());
+            translationDTO.setUbachaBachan(ubachaData.getUbachaBachan());
+            translationDTO.setShlokaText(shlokaList.get(i).getShlokatext());
+            translationDTO.setShlokaLine(shlokaList.get(i).getMaintextPK().getShlokaline());
+            translationDTO.setShlokaNum(shlokaList.get(i).getMaintextPK().getShlokanum());
+            translationDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
+            translationDTO.setAnubadText(shlokaList.get(i).getTranslatedtext());
+            translationDTO.setParvaName(shlokaList.get(i).getParva().getName());
+
+            translationDTOList.add(translationDTO);
+        }
+        return translationDTOList;
+    }
 
     public int addNewShloka(MaintextDTO maintextDTO) {
         int responseCode;
@@ -483,12 +510,14 @@ public class KSCoreService {
         Ubacha ubacha = ubachaDAO.findUbacha(maintextDTO.getUbachaId());
         ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
         Parva parva = parvaDAO.findParva(maintextDTO.getParvaId());
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
 
         maintextPK.setParvaId(maintextDTO.getParvaId());
         maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
         maintextPK.setShlokaline(maintextDTO.getShlokaLine());
         maintextPK.setShlokanum(maintextDTO.getShlokaNum());
-
+        
+        wordsDAO.deleteAllWordsAndChars(maintextDTO.getParvaId(), maintextDTO.getAdhyayId(), maintextDTO.getShlokaNum(), maintextDTO.getShlokaLine());
         Maintext maintext = maintextDAO.findMaintext(maintextPK);
 
         maintext.setMaintextPK(maintextPK);
@@ -506,6 +535,8 @@ public class KSCoreService {
 
         try {
             maintextDAO.edit(maintext);
+            
+            insertWordsToWordsTable(maintext);
             responseCode = DGRFResponseCode.SUCCESS;
 
         } catch (NonexistentEntityException ex) {
@@ -531,10 +562,9 @@ public class KSCoreService {
         maintextPK.setShlokaline(maintextDTO.getShlokaLine());
         maintextPK.setShlokanum(maintextDTO.getShlokaNum());
 
-        Maintext maintext = maintextDAO.findMaintext(maintextPK);
         try {
             wordsDAO.deleteAllWordsAndChars(maintextDTO.getParvaId(), maintextDTO.getAdhyayId(), maintextDTO.getShlokaNum(), maintextDTO.getShlokaLine());
-            maintextDAO.destroy(maintext.getMaintextPK());
+            maintextDAO.destroy(maintextPK);
             responseCode = DGRFResponseCode.SUCCESS;
 
         } catch (NonexistentEntityException ex) {

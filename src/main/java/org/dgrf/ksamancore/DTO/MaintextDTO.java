@@ -24,6 +24,7 @@ public class MaintextDTO {
     private String anubadText;
     private String ubachaName;
     private String ubachaBachan;
+    private String parvaName;
     private Date lastEditTS;
     
     private int maxShlokaNum;
@@ -140,5 +141,15 @@ public class MaintextDTO {
     public void setMaxShlokaLine(int maxShlokaLine) {
         this.maxShlokaLine = maxShlokaLine;
     }
+
+    public String getParvaName() {
+        return parvaName;
+    }
+
+    public void setParvaName(String parvaName) {
+        this.parvaName = parvaName;
+    }
+    
+    
     
 }
