@@ -448,11 +448,44 @@ public class KSCoreService {
             translationDTO.setShlokaNum(shlokaList.get(i).getMaintextPK().getShlokanum());
             translationDTO.setUbachaId(shlokaList.get(i).getUbachaId().getId());
             translationDTO.setAnubadText(shlokaList.get(i).getTranslatedtext());
+            translationDTO.setParvaId(shlokaList.get(i).getMaintextPK().getParvaId());
             translationDTO.setParvaName(shlokaList.get(i).getParva().getName());
 
             translationDTOList.add(translationDTO);
         }
         return translationDTOList;
+    }
+    
+    public int updateMaintextTranslation(MaintextDTO maintextDTO) {
+        int responseCode;
+
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        MaintextPK maintextPK = new MaintextPK();
+        Date updatedDate = new Date();
+
+        maintextPK.setParvaId(maintextDTO.getParvaId());
+        maintextPK.setAdhyayid(maintextDTO.getAdhyayId());
+        maintextPK.setShlokanum(maintextDTO.getShlokaNum());
+        maintextPK.setShlokaline(1);
+
+        Maintext maintext = maintextDAO.findMaintext(maintextPK);
+        
+        maintext.setTranslatedtext(maintextDTO.getAnubadText());
+        maintext.setLastupdatedts(updatedDate);
+
+        try {
+            maintextDAO.edit(maintext);
+            responseCode = DGRFResponseCode.SUCCESS;
+
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_NON_EXISTING;
+
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
     }
 
     public int addNewShloka(MaintextDTO maintextDTO) {
