@@ -24,4 +24,12 @@
         <query>SELECT m FROM Maintext m WHERE m.maintextPK.parvaId = :parvaId AND m.maintextPK.adhyayid = :adhyayId AND m.maintextPK.shlokanum = :shlokaNum</query>
     </named-query>
     
+    <named-query name="Maintext.findShlokaFirstChar">
+        <query>SELECT DISTINCT(m.firstchar) FROM Maintext m</query>
+    </named-query>
+    
+    <named-query name="Maintext.findShlokaByFirstChar">
+        <query>SELECT m FROM Maintext m WHERE m.firstchar = :firstChar</query>
+    </named-query>
+    
 </entity-mappings>

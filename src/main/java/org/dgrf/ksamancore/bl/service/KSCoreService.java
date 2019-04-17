@@ -6,7 +6,6 @@
 package org.dgrf.ksamancore.bl.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -612,4 +611,25 @@ public class KSCoreService {
         }
         return responseCode;
     }
+    
+    public List<MaintextDTO> getShlokaUniqueFirstCharList() {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        List<String> firstCharList;
+        firstCharList = maintextDAO.getUniqueShlokaFirstCharList();
+        List<MaintextDTO> maintextDTOList = new ArrayList<>();
+        
+        for(int i = 0; i<firstCharList.size(); i++) {
+            MaintextDTO maintextDTO = new MaintextDTO();
+            
+            maintextDTO.setFirstChar(firstCharList.get(i));
+            
+            maintextDTOList.add(maintextDTO);
+        }
+        return maintextDTOList;
+    }
+//    
+//    public List<MaintextDTO> getShlokaListByFirstChar(MaintextDTO maintextDTO){
+//        
+//    }
 }

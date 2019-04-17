@@ -67,4 +67,19 @@ public class MaintextDAO extends MaintextJpaController {
         List<Maintext> shlokaList = query.getResultList();
         return shlokaList;
     }
+    
+    public List<String> getUniqueShlokaFirstCharList() {
+        EntityManager em = getEntityManager();
+        TypedQuery<String> query = em.createNamedQuery("Maintext.findShlokaFirstChar", String.class);
+        List<String> firstCharList = query.getResultList();
+        return firstCharList;
+    }
+    
+    public List<Maintext> getShlokaByFirstChar(String firstChar) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Maintext> query = em.createNamedQuery("Maintext.findShlokTranslation", Maintext.class);
+        query.setParameter("firstChar", firstChar);
+        List<Maintext> shlokaList = query.getResultList();
+        return shlokaList;
+    }
 }
