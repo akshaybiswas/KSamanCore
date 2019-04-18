@@ -628,8 +628,35 @@ public class KSCoreService {
         }
         return maintextDTOList;
     }
-//    
-//    public List<MaintextDTO> getShlokaListByFirstChar(MaintextDTO maintextDTO){
-//        
-//    }
+    
+    public List<MaintextDTO> getShlokaListByFirstChar(String selectedFirstChar,int first,int pagesize){
+        
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        List<Maintext> maintext = maintextDAO.getShlokaByFirstChar(selectedFirstChar, first, pagesize);
+        
+        List<MaintextDTO> maintextDTOList = new ArrayList<>();
+        for(int i = 0; i<maintext.size(); i++) {
+            MaintextDTO maintextDTO = new MaintextDTO();
+            
+            maintextDTO.setParvaId(maintext.get(i).getMaintextPK().getParvaId());
+            maintextDTO.setAdhyayId(maintext.get(i).getMaintextPK().getAdhyayid());
+            maintextDTO.setShlokaNum(maintext.get(i).getMaintextPK().getShlokanum());
+            maintextDTO.setShlokaLine(maintext.get(i).getMaintextPK().getShlokaline());
+            maintextDTO.setShlokaText(maintext.get(i).getShlokatext());
+            maintextDTO.setParvaName(maintext.get(i).getParva().getName());
+            maintextDTO.setUbachaId(maintext.get(i).getUbachaId().getId());
+            maintextDTO.setUbachaName(maintext.get(i).getUbachaId().getName());
+            maintextDTO.setUbachaBachan(maintext.get(i).getUbachaId().getBachan());
+            
+            maintextDTOList.add(maintextDTO);
+        }
+        return maintextDTOList;
+    }
+    
+    public int getShlokaCountByFirstChar(String firstChar){
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        int shlokaCount = maintextDAO.getShlokaCountByFirstChar(firstChar);
+        return shlokaCount;
+    }
 }
