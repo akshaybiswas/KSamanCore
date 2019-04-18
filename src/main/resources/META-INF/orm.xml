@@ -29,11 +29,11 @@
     </named-query>
     
     <named-query name="Maintext.findShlokaByFirstChar">
-        <query>SELECT m FROM Maintext m WHERE m.firstchar = :firstChar ORDER BY m.shlokatext LIMIT :first,:pagesize</query>
+        <query>SELECT m FROM Maintext m WHERE m.firstchar = :firstChar ORDER BY m.shlokatext</query>
     </named-query>
     
     <named-query name="Maintext.findShlokaCountByFirstChar">
-        <query>SELECT COUNT(*) FROM Maintext m WHERE m.firstchar = :firstChar ORDER BY m.shlokatext</query>
+        <query>SELECT COUNT(m.shlokatext) FROM Maintext m WHERE m.firstchar = :firstChar ORDER BY m.shlokatext</query>
     </named-query>
     
 </entity-mappings>

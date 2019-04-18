@@ -629,11 +629,11 @@ public class KSCoreService {
         return maintextDTOList;
     }
     
-    public List<MaintextDTO> getShlokaListByFirstChar(String selectedFirstChar,int first,int pagesize){
+    public List<MaintextDTO> getShlokaListByFirstChar(String selectedFirstChar,int first,int pageSize){
         
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
         
-        List<Maintext> maintext = maintextDAO.getShlokaByFirstChar(selectedFirstChar, first, pagesize);
+        List<Maintext> maintext = maintextDAO.getShlokaByFirstChar(selectedFirstChar);
         
         List<MaintextDTO> maintextDTOList = new ArrayList<>();
         for(int i = 0; i<maintext.size(); i++) {
@@ -656,7 +656,7 @@ public class KSCoreService {
     
     public int getShlokaCountByFirstChar(String firstChar){
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
-        int shlokaCount = maintextDAO.getShlokaCountByFirstChar(firstChar);
+        int shlokaCount = maintextDAO.getShlokaCountByFirstChar(firstChar).intValue();
         return shlokaCount;
     }
 }

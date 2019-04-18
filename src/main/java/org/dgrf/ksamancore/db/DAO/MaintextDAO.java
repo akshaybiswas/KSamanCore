@@ -75,21 +75,21 @@ public class MaintextDAO extends MaintextJpaController {
         return firstCharList;
     }
     
-    public List<Maintext> getShlokaByFirstChar(String firstChar, int first, int pagesize) {
+    public List<Maintext> getShlokaByFirstChar(String firstChar) {
         EntityManager em = getEntityManager();
         TypedQuery<Maintext> query = em.createNamedQuery("Maintext.findShlokaByFirstChar", Maintext.class);
         query.setParameter("firstChar", firstChar);
-        query.setParameter("first", first);
-        query.setParameter("pagesize", pagesize);
+//        query.setParameter("first", first);
+//        query.setParameter("pagesize", pagesize);
         List<Maintext> shlokaList = query.getResultList();
         return shlokaList;
     }
     
-    public Integer getShlokaCountByFirstChar(String firstChar) {
+    public Long getShlokaCountByFirstChar(String firstChar) {
         EntityManager em = getEntityManager();
-        TypedQuery<Integer> query = em.createNamedQuery("Maintext.findShlokaCountByFirstChar", Integer.class);
+        TypedQuery<Long> query = em.createNamedQuery("Maintext.findShlokaCountByFirstChar", Long.class);
         query.setParameter("firstChar", firstChar);
-        Integer shlokaCount = query.getSingleResult();
+        Long shlokaCount = query.getSingleResult();
         return shlokaCount;
     }
 }
