@@ -5,12 +5,15 @@
  */
 package org.dgrf.ksamancore.db.DAO;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.dgrf.ksamancore.db.JPA.MaintextJpaController;
 import org.dgrf.ksamancore.db.entities.Maintext;
+import org.dgrf.ksamancore.db.entities.MaintextPK;
 
 /**
  *
@@ -75,14 +78,37 @@ public class MaintextDAO extends MaintextJpaController {
         return firstCharList;
     }
     
-    public List<Maintext> getShlokaByFirstChar(String firstChar) {
+//    public List<Maintext> getShlokaByFirstChar(String firstChar) {
+//        EntityManager em = getEntityManager();
+//        TypedQuery<Maintext> query = em.createNamedQuery("Maintext.findShlokaByFirstChar", Maintext.class);
+//        query.setParameter("firstChar", firstChar);
+////        query.setParameter("first", first);
+////        query.setParameter("pagesize", pagesize);
+//        List<Maintext> shlokaList = query.getResultList();
+//        return shlokaList;
+//    }
+    public List<Maintext> getShlokaByFirstChar(String firstChar,int first,int pagesize) {
         EntityManager em = getEntityManager();
-        TypedQuery<Maintext> query = em.createNamedQuery("Maintext.findShlokaByFirstChar", Maintext.class);
-        query.setParameter("firstChar", firstChar);
-//        query.setParameter("first", first);
-//        query.setParameter("pagesize", pagesize);
-        List<Maintext> shlokaList = query.getResultList();
-        return shlokaList;
+        Query query = em.createNativeQuery("select parva_id,adhyayid,shlokanum,shlokaline,ubacha_id,shlokatext,firstchar,endchar,translatedtext, lastupdatedts  from dgrfdb0601.maintext where firstchar = ?1 order by shlokatext limit ?2,?3");
+        query.setParameter(1, firstChar);
+        query.setParameter(2, first);
+        query.setParameter(3, pagesize);
+        List<Object[]> shlokaLines = query.getResultList();
+        List<Maintext> maintextList = new ArrayList<>();
+        for (Object[] shlokaLine:shlokaLines ) {
+            Maintext maintext = new Maintext();
+            MaintextPK maintextPK = new MaintextPK();
+            int parvaId = (Integer)shlokaLine[0];
+            int adhyayid = (Integer)shlokaLine[1];
+            int shlokanum = (Integer)shlokaLine[2];
+            int shlokaline = (Integer)shlokaLine[3];
+            int ubachaId = (Integer)shlokaLine[4];
+            int shlokatext = (Integer)shlokaLine[5];
+            int firstchar = (Integer)shlokaLine[6];
+            
+        }
+        
+        return maintextList;
     }
     
     public Long getShlokaCountByFirstChar(String firstChar) {

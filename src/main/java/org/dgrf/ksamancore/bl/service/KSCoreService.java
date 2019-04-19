@@ -633,7 +633,7 @@ public class KSCoreService {
         
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
         
-        List<Maintext> maintext = maintextDAO.getShlokaByFirstChar(selectedFirstChar);
+        List<Maintext> maintext = maintextDAO.getShlokaByFirstChar(selectedFirstChar, first, pageSize);
         
         List<MaintextDTO> maintextDTOList = new ArrayList<>();
         for(int i = 0; i<maintext.size(); i++) {
