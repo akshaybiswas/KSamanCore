@@ -18,6 +18,10 @@ public class WordsDTO {
     private int shlokaLine;
     private String wordText;
     private String wordFirstChar;
+    private String parvaName;
+    private int ubachaId;
+    private String ubachaName;
+    private String ubachaBachan;
 
     public int getWordNum() {
         return wordNum;
@@ -73,6 +77,38 @@ public class WordsDTO {
 
     public void setWordFirstChar(String wordFirstChar) {
         this.wordFirstChar = wordFirstChar;
+    }
+
+    public String getParvaName() {
+        return parvaName;
+    }
+
+    public void setParvaName(String parvaName) {
+        this.parvaName = parvaName;
+    }
+
+    public int getUbachaId() {
+        return ubachaId;
+    }
+
+    public void setUbachaId(int ubachaId) {
+        this.ubachaId = ubachaId;
+    }
+
+    public String getUbachaName() {
+        return ubachaName;
+    }
+
+    public void setUbachaName(String ubachaName) {
+        this.ubachaName = ubachaName;
+    }
+
+    public String getUbachaBachan() {
+        return ubachaBachan;
+    }
+
+    public void setUbachaBachan(String ubachaBachan) {
+        this.ubachaBachan = ubachaBachan;
     }
     
     

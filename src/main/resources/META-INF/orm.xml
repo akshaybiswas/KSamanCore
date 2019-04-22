@@ -36,4 +36,12 @@
         <query>SELECT COUNT(m.shlokatext) FROM Maintext m WHERE m.firstchar = :firstChar ORDER BY m.shlokatext</query>
     </named-query>
     
+    <named-query name="Words.findAllDistinctFirstchar">
+        <query>SELECT DISTINCT(w.firstchar) c FROM Words w ORDER BY c</query>
+    </named-query>
+    
+    <named-query name="Words.findWordsCountByFirstChar">
+        <query>SELECT COUNT(w.wordtext) FROM Words w WHERE w.firstchar = :firstChar ORDER BY w.wordtext</query>
+    </named-query>
+    
 </entity-mappings>

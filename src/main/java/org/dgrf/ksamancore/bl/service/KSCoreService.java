@@ -361,6 +361,55 @@ public class KSCoreService {
             }
         }
     }
+    
+    public List<WordsDTO> getShlokaWordUniqueFirstCharList() {
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        
+        List<String> firstCharList;
+        firstCharList = wordsDAO.getUniqueShlokaWordsFirstCharList();
+        List<WordsDTO> wordsDTOList = new ArrayList<>();
+        
+        for(int i = 0; i<firstCharList.size(); i++) {
+            WordsDTO wordsDTO = new WordsDTO();
+            
+            wordsDTO.setWordFirstChar(firstCharList.get(i));
+            
+            wordsDTOList.add(wordsDTO);
+        }
+        return wordsDTOList;
+    }
+    
+    public int getWordsCountByFirstChar(String firstChar){
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        int wordsCount = wordsDAO.getWordsCountByFirstChar(firstChar).intValue();
+        return wordsCount;
+    }
+    
+    public List<WordsDTO> getWordsListByFirstChar(String selectedFirstChar,int first,int pageSize){
+        
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        
+        List<Words> words = wordsDAO.getWordsByFirstChar(selectedFirstChar, first, pageSize);
+        
+        List<WordsDTO> wordsDTOList = new ArrayList<>();
+        for(int i = 0; i<words.size(); i++) {
+            WordsDTO wordsDTO = new WordsDTO();
+            
+            wordsDTO.setParvaId(words.get(i).getWordsPK().getMaintextParvaId());
+            wordsDTO.setAdhyayId(words.get(i).getWordsPK().getMaintextAdhyayid());
+            wordsDTO.setShlokaNum(words.get(i).getWordsPK().getMaintextShlokanum());
+            wordsDTO.setShlokaLine(words.get(i).getWordsPK().getMaintextShlokaline());
+            wordsDTO.setWordText(words.get(i).getWordtext());
+            wordsDTO.setWordFirstChar(words.get(i).getFirstchar());
+            //wordsDTO.setParvaName(words.get(i).getMaintext().getParva().getName());
+            //wordsDTO.setUbachaId(words.get(i).getMaintext().getUbachaId().getId());
+            //wordsDTO.setUbachaName(words.get(i).getMaintext().getUbachaId().getName());
+            //wordsDTO.setUbachaBachan(words.get(i).getMaintext().getUbachaId().getBachan());
+            
+            wordsDTOList.add(wordsDTO);
+        }
+        return wordsDTOList;
+    }
 
     //////////////////// MAINTEXT OPERATIONS ////////////////////
     
