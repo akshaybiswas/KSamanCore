@@ -6,6 +6,7 @@
 package org.dgrf.ksamancore.db.DAO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +15,8 @@ import javax.persistence.TypedQuery;
 import org.dgrf.ksamancore.db.JPA.MaintextJpaController;
 import org.dgrf.ksamancore.db.entities.Maintext;
 import org.dgrf.ksamancore.db.entities.MaintextPK;
+import org.dgrf.ksamancore.db.entities.Parva;
+import org.dgrf.ksamancore.db.entities.Ubacha;
 
 /**
  *
@@ -88,8 +91,31 @@ public class MaintextDAO extends MaintextJpaController {
 //        return shlokaList;
 //    }
     public List<Maintext> getShlokaByFirstChar(String firstChar,int first,int pagesize) {
+        
         EntityManager em = getEntityManager();
-        Query query = em.createNativeQuery("select parva_id,adhyayid,shlokanum,shlokaline,ubacha_id,shlokatext,firstchar,endchar,translatedtext, lastupdatedts  from dgrfdb0601.maintext where firstchar = ?1 order by shlokatext limit ?2,?3");
+        String myQuery = 
+                "select m.parva_id,"
+                + "m.adhyayid,"
+                + "m.shlokanum,"
+                + "m.shlokaline,"
+                + "m.ubacha_id,"
+                + "m.shlokatext,"
+                + "m.firstchar,"
+                + "m.endchar,"
+                + "m.translatedtext, "
+                + "m.lastupdatedts, "
+                + "p.name, "
+                + "u.name, "
+                + "u.bachan "
+                + "from dgrfdb0601.maintext m,"
+                + " dgrfdb0601.parva p,"
+                + " dgrfdb0601.ubacha u"
+                + " where firstchar = ?1 "
+                + " and p.id = m.parva_id"
+                + " and u.id = m.ubacha_id"
+                + " order by shlokatext limit ?2,?3";
+        Query query = em.createNativeQuery(myQuery);
+        System.out.println(myQuery);
         query.setParameter(1, firstChar);
         query.setParameter(2, first);
         query.setParameter(3, pagesize);
@@ -98,14 +124,42 @@ public class MaintextDAO extends MaintextJpaController {
         for (Object[] shlokaLine:shlokaLines ) {
             Maintext maintext = new Maintext();
             MaintextPK maintextPK = new MaintextPK();
+            
             int parvaId = (Integer)shlokaLine[0];
             int adhyayid = (Integer)shlokaLine[1];
             int shlokanum = (Integer)shlokaLine[2];
             int shlokaline = (Integer)shlokaLine[3];
             int ubachaId = (Integer)shlokaLine[4];
-            int shlokatext = (Integer)shlokaLine[5];
-            int firstchar = (Integer)shlokaLine[6];
+            String shlokatext = (String)shlokaLine[5];
+            String firstchar = (String)shlokaLine[6];
+            String endchar = (String)shlokaLine[7];
+            String translatedtext = (String)shlokaLine[8];
+            Date lastupdatedts = (Date)shlokaLine[9];
+            String parvaName = (String)shlokaLine[10];
+            String ubachaName = (String)shlokaLine[11];
+            String ubachaBachan = (String)shlokaLine[12];
             
+            Ubacha ubacha = new Ubacha(ubachaId);
+            ubacha.setName(ubachaName);
+            ubacha.setBachan(ubachaBachan);
+            
+            Parva parva = new Parva(parvaId);
+            parva.setName(parvaName);
+            
+            maintextPK.setParvaId(parvaId);
+            maintextPK.setAdhyayid(adhyayid);
+            maintextPK.setShlokanum(shlokanum);
+            maintextPK.setShlokaline(shlokaline);
+            maintext.setMaintextPK(maintextPK);
+            maintext.setParva(parva);
+            maintext.setUbachaId(ubacha);
+            maintext.setFirstchar(firstchar);
+            maintext.setEndchar(endchar);
+            maintext.setShlokatext(shlokatext);
+            maintext.setLastupdatedts(lastupdatedts);
+            maintext.setTranslatedtext(translatedtext);
+            
+            maintextList.add(maintext);
         }
         
         return maintextList;
