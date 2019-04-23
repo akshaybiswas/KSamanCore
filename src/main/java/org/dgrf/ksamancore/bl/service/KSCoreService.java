@@ -401,10 +401,10 @@ public class KSCoreService {
             wordsDTO.setShlokaLine(words.get(i).getWordsPK().getMaintextShlokaline());
             wordsDTO.setWordText(words.get(i).getWordtext());
             wordsDTO.setWordFirstChar(words.get(i).getFirstchar());
-            //wordsDTO.setParvaName(words.get(i).getMaintext().getParva().getName());
-            //wordsDTO.setUbachaId(words.get(i).getMaintext().getUbachaId().getId());
-            //wordsDTO.setUbachaName(words.get(i).getMaintext().getUbachaId().getName());
-            //wordsDTO.setUbachaBachan(words.get(i).getMaintext().getUbachaId().getBachan());
+            wordsDTO.setParvaName(words.get(i).getMaintext().getParva().getName());
+            wordsDTO.setUbachaId(words.get(i).getMaintext().getUbachaId().getId());
+            wordsDTO.setUbachaName(words.get(i).getMaintext().getUbachaId().getName());
+            wordsDTO.setUbachaBachan(words.get(i).getMaintext().getUbachaId().getBachan());
             
             wordsDTOList.add(wordsDTO);
         }
