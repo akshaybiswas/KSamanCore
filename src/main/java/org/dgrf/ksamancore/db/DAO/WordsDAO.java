@@ -24,11 +24,11 @@ import org.dgrf.ksamancore.db.entities.WordsPK;
  * @author dgrfiv
  */
 public class WordsDAO extends WordsJpaController {
-
+    
     public WordsDAO(EntityManagerFactory emf) {
         super(emf);
     }
-
+    
     public void deleteAllWordsAndChars(int parvaId, int adhyayId, int shlokaNum, int shlokaLine) {
         EntityManager em = getEntityManager();
         TypedQuery<Words> query = em.createNamedQuery("Words.deleteAllWordsAndChars", Words.class);
@@ -36,20 +36,20 @@ public class WordsDAO extends WordsJpaController {
         query.setParameter("adhyayId", adhyayId);
         query.setParameter("shlokaNum", shlokaNum);
         query.setParameter("shlokaLine", shlokaLine);
-
+        
         em.getTransaction().begin();
         query.executeUpdate();
         em.getTransaction().commit();
         em.close();
     }
-
+    
     public List<String> getUniqueShlokaWordsFirstCharList() {
         EntityManager em = getEntityManager();
         TypedQuery<String> query = em.createNamedQuery("Words.findAllDistinctFirstchar", String.class);
         List<String> firstCharList = query.getResultList();
         return firstCharList;
     }
-
+    
     public Long getWordsCountByFirstChar(String firstChar) {
         EntityManager em = getEntityManager();
         TypedQuery<Long> query = em.createNamedQuery("Words.findWordsCountByFirstChar", Long.class);
@@ -57,9 +57,9 @@ public class WordsDAO extends WordsJpaController {
         Long wordsCount = query.getSingleResult();
         return wordsCount;
     }
-
+    
     public List<Words> getWordsByFirstChar(String firstChar, int first, int pagesize) {
-
+        
         EntityManager em = getEntityManager();
         String myQuery = "select \n"
                 + "w.maintext_parva_id,\n"
@@ -71,7 +71,8 @@ public class WordsDAO extends WordsJpaController {
                 + "u.id,\n"
                 + "u.name,\n"
                 + "u.bachan,\n"
-                + "p.name\n"
+                + "p.name,\n"
+                + "m.shlokatext\n"
                 + "from \n"
                 + "words w,\n"
                 + "maintext m,\n"
@@ -84,7 +85,7 @@ public class WordsDAO extends WordsJpaController {
                 + "and m.shlokaline = w.maintext_shlokaline\n"
                 + "and p.id = m.parva_id\n"
                 + "and u.id = m.ubacha_id\n"
-                +  "order by wordtext limit ?2,?3";
+                + "order by wordtext limit ?2,?3";
         
         Query query = em.createNativeQuery(myQuery);
         System.out.println(myQuery);
@@ -93,12 +94,12 @@ public class WordsDAO extends WordsJpaController {
         query.setParameter(3, pagesize);
         List<Object[]> wordTexts = query.getResultList();
         List<Words> wordsList = new ArrayList<>();
-
+        
         for (Object[] wordText : wordTexts) {
             Words words = new Words();
             WordsPK wordsPK = new WordsPK();
             MaintextPK maintextPK = new MaintextPK();
-
+            
             int parvaId = (Integer) wordText[0];
             int adhyayid = (Integer) wordText[1];
             int shlokanum = (Integer) wordText[2];
@@ -109,16 +110,17 @@ public class WordsDAO extends WordsJpaController {
             String ubachaName = (String) wordText[7];
             String ubachaBachan = (String) wordText[8];
             String parvaName = (String) wordText[9];
-
+            String shlokaText = (String) wordText[10];
+            
             maintextPK.setParvaId(parvaId);
             maintextPK.setAdhyayid(adhyayid);
             maintextPK.setShlokanum(shlokanum);
             maintextPK.setShlokaline(shlokaline);
-
+            
             Maintext maintext = new Maintext(maintextPK);
             Parva parva = new Parva(parvaId, parvaName);
             Ubacha ubacha = new Ubacha(ubachaId, ubachaName, ubachaBachan);
-
+            
             wordsPK.setMaintextParvaId(parvaId);
             wordsPK.setMaintextAdhyayid(adhyayid);
             wordsPK.setMaintextShlokanum(shlokanum);
@@ -130,11 +132,12 @@ public class WordsDAO extends WordsJpaController {
             
             maintext.setUbachaId(ubacha);
             maintext.setParva(parva);
+            maintext.setShlokatext(shlokaText);
             words.setMaintext(maintext);
-
+            
             wordsList.add(words);
         }
-
+        
         return wordsList;
     }
 }

@@ -405,6 +405,7 @@ public class KSCoreService {
             wordsDTO.setUbachaId(words.get(i).getMaintext().getUbachaId().getId());
             wordsDTO.setUbachaName(words.get(i).getMaintext().getUbachaId().getName());
             wordsDTO.setUbachaBachan(words.get(i).getMaintext().getUbachaId().getBachan());
+            wordsDTO.setShlokaText(words.get(i).getMaintext().getShlokatext());
             
             wordsDTOList.add(wordsDTO);
         }

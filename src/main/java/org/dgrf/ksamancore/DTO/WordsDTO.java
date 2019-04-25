@@ -10,12 +10,13 @@ package org.dgrf.ksamancore.DTO;
  * @author dgrfiv
  */
 public class WordsDTO {
-    
+
     private int wordNum;
     private int parvaId;
     private int adhyayId;
     private int shlokaNum;
     private int shlokaLine;
+    private String shlokaText;
     private String wordText;
     private String wordFirstChar;
     private String parvaName;
@@ -110,7 +111,13 @@ public class WordsDTO {
     public void setUbachaBachan(String ubachaBachan) {
         this.ubachaBachan = ubachaBachan;
     }
-    
-    
-    
+
+    public String getShlokaText() {
+        return shlokaText;
+    }
+
+    public void setShlokaText(String shlokaText) {
+        this.shlokaText = shlokaText;
+    }
+
 }
