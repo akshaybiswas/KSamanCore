@@ -709,4 +709,44 @@ public class KSCoreService {
         int shlokaCount = maintextDAO.getShlokaCountByFirstChar(firstChar).intValue();
         return shlokaCount;
     }
+    
+    
+    //////////////////// LANDING OPERATIONS ////////////////////
+    
+    public int getTotalShlokaCount() {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        int shlokaCount = maintextDAO.getMaintextCount();
+        return shlokaCount;
+    }
+    
+    public int getTotalWordsCount() {
+        WordsDAO wordsDAO = new WordsDAO(DatabaseConnection.EMF);
+        int wordsCount = wordsDAO.getWordsCount();
+        return wordsCount;
+    }
+    
+    public int getTotalParvaCount() {
+        ParvaDAO parvaDAO = new ParvaDAO(DatabaseConnection.EMF);
+        int parvaCount = parvaDAO.getParvaCount();
+        return parvaCount;
+    }
+    
+    public int getTotalUbachaCount() {
+        UbachaDAO ubachaDAO = new UbachaDAO(DatabaseConnection.EMF);
+        int ubachaCount = ubachaDAO.getUbachaCount();
+        return ubachaCount;
+    }
+    
+    public int getTotalAdhyayCount() {
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        int parvaCount = getParvaDTOList().size();
+        
+        int adhyayCount = 0;
+        
+        for(int i=0; i<parvaCount; i++) {
+            int count = maintextDAO.getAdhyayByParvaId(getParvaDTOList().get(i).getParvaId()).size();
+            adhyayCount = adhyayCount + count;
+        }
+        return adhyayCount;
+    }
 }
