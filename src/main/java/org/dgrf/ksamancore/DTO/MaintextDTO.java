@@ -26,6 +26,8 @@ public class MaintextDTO {
     private String ubachaBachan;
     private String parvaName;
     private Date lastEditTS;
+    private int shlokaNumCount;
+    private int shlokaNumTranslatedCount;
     
     private int maxShlokaNum;
     private int maxShlokaLine;
@@ -149,7 +151,22 @@ public class MaintextDTO {
     public void setParvaName(String parvaName) {
         this.parvaName = parvaName;
     }
-    
-    
+
+    public int getShlokaNumCount() {
+        return shlokaNumCount;
+    }
+
+    public void setShlokaNumCount(int shlokaNumCount) {
+        this.shlokaNumCount = shlokaNumCount;
+    }
+
+    public int getShlokaNumTranslatedCount() {
+        return shlokaNumTranslatedCount;
+    }
+
+    public void setShlokaNumTranslatedCount(int shlokaNumTranslatedCount) {
+        this.shlokaNumTranslatedCount = shlokaNumTranslatedCount;
+    }
+
     
 }

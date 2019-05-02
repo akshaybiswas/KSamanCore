@@ -44,4 +44,11 @@
         <query>SELECT COUNT(w.wordtext) FROM Words w WHERE w.firstchar = :firstChar ORDER BY w.wordtext</query>
     </named-query>
     
+    <named-query name="Maintext.countTranslatedShloka">
+        <query>SELECT COUNT(m) FROM Maintext m WHERE m.maintextPK.shlokaline = 1 AND m.translatedtext IS NOT NULL</query>
+    </named-query>
+    
+    <named-query name="Maintext.countNotTranslatedShloka">
+        <query>SELECT COUNT(m) FROM Maintext m WHERE m.maintextPK.shlokaline = 1 AND m.translatedtext IS NULL</query>
+    </named-query>
 </entity-mappings>

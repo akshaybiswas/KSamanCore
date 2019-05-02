@@ -172,4 +172,18 @@ public class MaintextDAO extends MaintextJpaController {
         Long shlokaCount = query.getSingleResult();
         return shlokaCount;
     }
+    
+    public Long getTranslatedShlokaCount() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Long> query = em.createNamedQuery("Maintext.countTranslatedShloka", Long.class);
+        Long shlokaCount = query.getSingleResult();
+        return shlokaCount;
+    }
+    
+    public Long getNotTranslatedShlokaCount() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Long> query = em.createNamedQuery("Maintext.countNotTranslatedShloka", Long.class);
+        Long shlokaCount = query.getSingleResult();
+        return shlokaCount;
+    }
 }
