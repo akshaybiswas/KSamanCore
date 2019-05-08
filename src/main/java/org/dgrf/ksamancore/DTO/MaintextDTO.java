@@ -6,6 +6,7 @@
 package org.dgrf.ksamancore.DTO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -31,6 +32,8 @@ public class MaintextDTO {
     
     private int maxShlokaNum;
     private int maxShlokaLine;
+    private List<ReferencetextDTO> referencetextDTOList;
+    private ReferencetextDTO referencetextDTO;
 
     public int getParvaId() {
         return parvaId;
@@ -168,5 +171,22 @@ public class MaintextDTO {
         this.shlokaNumTranslatedCount = shlokaNumTranslatedCount;
     }
 
+    public List<ReferencetextDTO> getReferencetextDTOList() {
+        return referencetextDTOList;
+    }
+
+    public void setReferencetextDTOList(List<ReferencetextDTO> referencetextDTOList) {
+        this.referencetextDTOList = referencetextDTOList;
+    }
+
+    public ReferencetextDTO getReferencetextDTO() {
+        return referencetextDTO;
+    }
+
+    public void setReferencetextDTO(ReferencetextDTO referencetextDTO) {
+        this.referencetextDTO = referencetextDTO;
+    }
+
+    
     
 }

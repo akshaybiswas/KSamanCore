@@ -13,10 +13,12 @@ import java.util.logging.Logger;
 import org.dgrf.cloud.response.DGRFResponseCode;
 import org.dgrf.ksamancore.DTO.MaintextDTO;
 import org.dgrf.ksamancore.DTO.ParvaDTO;
+import org.dgrf.ksamancore.DTO.ReferencetextDTO;
 import org.dgrf.ksamancore.DTO.UbachaDTO;
 import org.dgrf.ksamancore.DTO.WordsDTO;
 import org.dgrf.ksamancore.db.DAO.MaintextDAO;
 import org.dgrf.ksamancore.db.DAO.ParvaDAO;
+import org.dgrf.ksamancore.db.DAO.ReferencetextDAO;
 import org.dgrf.ksamancore.db.DAO.UbachaDAO;
 import org.dgrf.ksamancore.db.DAO.WordsDAO;
 import org.dgrf.ksamancore.db.JPA.exceptions.IllegalOrphanException;
@@ -25,6 +27,8 @@ import org.dgrf.ksamancore.db.JPA.exceptions.PreexistingEntityException;
 import org.dgrf.ksamancore.db.entities.Maintext;
 import org.dgrf.ksamancore.db.entities.MaintextPK;
 import org.dgrf.ksamancore.db.entities.Parva;
+import org.dgrf.ksamancore.db.entities.Referencetext;
+import org.dgrf.ksamancore.db.entities.ReferencetextPK;
 import org.dgrf.ksamancore.db.entities.Ubacha;
 import org.dgrf.ksamancore.db.entities.Words;
 import org.dgrf.ksamancore.db.entities.WordsPK;
@@ -708,6 +712,31 @@ public class KSCoreService {
         MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
         int shlokaCount = maintextDAO.getShlokaCountByFirstChar(firstChar).intValue();
         return shlokaCount;
+    }
+    
+    //////////////////// REFERENCETEXT OPERATIONS ////////////////////
+ 
+    public List<ReferencetextDTO> getReftextList(int parvaId, int adhyayId, int shlokaNum, int shlokaLine) {
+        ReferencetextDAO referencetextDAO = new ReferencetextDAO(DatabaseConnection.EMF);
+        List<Referencetext> referencetextList = referencetextDAO.getAnubadTika(parvaId, adhyayId, shlokaNum, shlokaLine);
+        
+        List<ReferencetextDTO> referencetextDTOList = new ArrayList<>();
+        
+        for(int i =0; i<referencetextList.size(); i++){
+            ReferencetextDTO referencetextDTO = new ReferencetextDTO();
+            
+            referencetextDTO.setParvaId(parvaId);
+            referencetextDTO.setAdhyayId(adhyayId);
+            referencetextDTO.setShlokaNum(shlokaNum);
+            referencetextDTO.setShlokaLine(shlokaLine);
+            referencetextDTO.setRefTextId(referencetextDTOList.get(i).getRefTextId());
+            referencetextDTO.setRefText(referencetextList.get(i).getText());
+            referencetextDTO.setRefTextPosition(referencetextList.get(i).getReferencetextpos());
+            
+            referencetextDTOList.add(referencetextDTO);
+        }
+        
+        return referencetextDTOList;
     }
     
     

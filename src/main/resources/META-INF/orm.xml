@@ -51,4 +51,8 @@
     <named-query name="Maintext.countNotTranslatedShloka">
         <query>SELECT COUNT(m) FROM Maintext m WHERE m.maintextPK.shlokaline = 1 AND m.translatedtext IS NULL</query>
     </named-query>
+    
+    <named-query name="Referencetext.findAllTikaOfSelectedAnubad">
+        <query>SELECT r FROM Referencetext r WHERE r.referencetextPK.maintextParvaId = :parvaId AND r.referencetextPK.maintextAdhyayid = :adhyayId AND r.referencetextPK.maintextShlokanum = :shlokaNum AND r.referencetextPK.maintextShlokaline = :shlokaLine"</query>
+    </named-query>
 </entity-mappings>
