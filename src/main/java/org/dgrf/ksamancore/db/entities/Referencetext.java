@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "referencetext")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Referencetext.findAll", query = "SELECT r FROM Referencetext r")})
+@NamedQuery(name = "Referencetext.findAll", query = "SELECT r FROM Referencetext r")})
 public class Referencetext implements Serializable {
 
     private static final long serialVersionUID = 1L;

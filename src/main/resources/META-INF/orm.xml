@@ -53,6 +53,6 @@
     </named-query>
     
     <named-query name="Referencetext.findAllTikaOfSelectedAnubad">
-        <query>SELECT r FROM Referencetext r WHERE r.referencetextPK.maintextParvaId = :parvaId AND r.referencetextPK.maintextAdhyayid = :adhyayId AND r.referencetextPK.maintextShlokanum = :shlokaNum AND r.referencetextPK.maintextShlokaline = :shlokaLine"</query>
+        <query>SELECT r FROM Referencetext r WHERE r.referencetextPK.maintextParvaId = :parvaId AND r.referencetextPK.maintextAdhyayid = :adhyayId AND r.referencetextPK.maintextShlokanum = :shlokaNum AND r.referencetextPK.maintextShlokaline = :shlokaLine</query>
     </named-query>
 </entity-mappings>

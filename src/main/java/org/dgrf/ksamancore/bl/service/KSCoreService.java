@@ -729,9 +729,9 @@ public class KSCoreService {
             referencetextDTO.setAdhyayId(adhyayId);
             referencetextDTO.setShlokaNum(shlokaNum);
             referencetextDTO.setShlokaLine(shlokaLine);
-            referencetextDTO.setRefTextId(referencetextDTOList.get(i).getRefTextId());
+            referencetextDTO.setRefTextId(referencetextList.get(i).getReferencetextPK().getReftextid());
             referencetextDTO.setRefText(referencetextList.get(i).getText());
-            referencetextDTO.setRefTextPosition(referencetextList.get(i).getReferencetextpos());
+            //referencetextDTO.setRefTextPosition(referencetextList.get(i).getReferencetextpos());
             
             referencetextDTOList.add(referencetextDTO);
         }
@@ -739,6 +739,46 @@ public class KSCoreService {
         return referencetextDTOList;
     }
     
+    public int addNewReference(ReferencetextDTO referencetextDTO) {
+        int responseCode;
+
+        ReferencetextDAO referencetextDAO = new ReferencetextDAO(DatabaseConnection.EMF);
+        ReferencetextPK referencetextPK = new ReferencetextPK();
+        Referencetext referencetext = new Referencetext();
+        MaintextPK maintextPK = new MaintextPK();
+        MaintextDAO maintextDAO = new MaintextDAO(DatabaseConnection.EMF);
+        
+        referencetextPK.setMaintextParvaId(referencetextDTO.getParvaId());
+        referencetextPK.setMaintextAdhyayid(referencetextDTO.getAdhyayId());
+        referencetextPK.setMaintextShlokanum(referencetextDTO.getShlokaNum());
+        referencetextPK.setMaintextShlokaline(referencetextDTO.getShlokaLine());
+        referencetextPK.setReftextid(referencetextDTO.getRefTextId());
+
+        maintextPK.setParvaId(referencetextDTO.getParvaId());
+        maintextPK.setAdhyayid(referencetextDTO.getAdhyayId());
+        maintextPK.setShlokaline(referencetextDTO.getShlokaLine());
+        maintextPK.setShlokanum(referencetextDTO.getShlokaNum());
+        
+        Maintext maintext = maintextDAO.findMaintext(maintextPK);
+        
+        referencetext.setReferencetextPK(referencetextPK);
+        referencetext.setMaintext(maintext);
+        referencetext.setText(referencetextDTO.getRefText());
+
+        try {
+            referencetextDAO.create(referencetext);
+            responseCode = DGRFResponseCode.SUCCESS;
+
+        } catch (PreexistingEntityException ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_DUPLICATE;
+
+        } catch (Exception ex) {
+            Logger.getLogger(KSCoreService.class.getName()).log(Level.SEVERE, null, ex);
+            responseCode = DGRFResponseCode.DB_SEVERE;
+        }
+        return responseCode;
+    }
     
     //////////////////// LANDING OPERATIONS ////////////////////
     
